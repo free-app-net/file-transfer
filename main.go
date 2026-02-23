@@ -12,6 +12,13 @@ import (
 var webapp embed.FS
 
 func main() {
+	var host string
+	if os.Getenv("HOST") != "" {
+		host = os.Getenv("HOST")
+	} else {
+		host = "0.0.0.0"
+	}
+
 	var port int
 	if os.Getenv("PORT") != "" {
 		port, _ = strconv.Atoi(os.Getenv("PORT"))
@@ -25,6 +32,7 @@ func main() {
 	}
 
 	server.Run(server.RunOpts{
+		Host: host,
 		Port: port,
 		Fs:   Fs,
 	})

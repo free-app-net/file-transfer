@@ -11,6 +11,7 @@ import (
 )
 
 type RunOpts struct {
+	Host string
 	Port int
 	Fs   fs.FS
 }
@@ -30,12 +31,14 @@ func Run(opts RunOpts) {
 
 	mux.Handle("/", serveFilesWith404Handling(opts.Fs))
 
+	addr := fmt.Sprintf("%s:%d", opts.Host, opts.Port)
+
 	serv := &http.Server{
 		Handler: mux,
-		Addr:    fmt.Sprintf(":%d", opts.Port),
+		Addr:    addr,
 	}
 
-	log.Printf("FPPS server is listening on port %d\n", opts.Port)
+	log.Printf("FPPS server is listening on %s\n", addr)
 	err := serv.ListenAndServe()
 
 	if err != nil {
