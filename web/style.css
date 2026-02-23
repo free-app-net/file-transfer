@@ -173,6 +173,31 @@ main {
     }
 }
 
+/* Footer Section */
+.footer {
+    margin-top: var(--spacing-2xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.footer__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    line-height: var(--line-height-relaxed);
+}
+
+.footer a {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+}
+
+.footer a:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+}
+
 /* Typography */
 h1,
 h2,
