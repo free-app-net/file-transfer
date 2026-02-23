@@ -9,6 +9,7 @@ docker-dev:
 	docker run -e PORT=6173 -p 6173:6173 fpps-dev
 
 docker-publish:
+	pnpm test
 	@if [ -z "$(TAGNAME)" ]; then \
 		echo "ERROR: TAGNAME is required. e.g. make TAGNAME=1.2.3 docker-publish"; \
 		exit 1; \

@@ -8,7 +8,7 @@
     "dev:test:union": "vitest",
     "dev:test:e2e": "pnpm exec playwright test --ui",
     "build": "vite build",
-    "test": "pnpm test:unit && pnpm test:server && pnpm test:e2e",
+    "test": "pnpm test:unit && pnpm test:server",
     "test:unit": "vitest --run --coverage",
     "test:server": "go test ./...",
     "test:e2e": "echo 'Headless playwright fails. Running UI instead.' && pnpm dev:test:e2e",
