@@ -30,87 +30,37 @@ export type PeerMessage =
   | { type: "transfer-done" }
   | { type: "preview-content"; value: PreviewContent };
 
-// TODO: encode it simply with json
+const CHUNK_START = "c".charCodeAt(0);
+const JSON_START = "{".charCodeAt(0);
+
+// Simple encoding scheme
 // if first byte starts with "c" -> its a chunk
 // if with "{" -> its arbitrary json
 export class TransferProtocol {
   static encode(message: PeerMessage): Uint8Array {
-    function stringify(value: unknown) {
-      return new TextEncoder().encode(JSON.stringify(value));
+    if (message.type === "transfer-chunk") {
+      return new Uint8Array([CHUNK_START, ...message.value]);
     }
 
-    switch (message.type) {
-      case "transfer-start":
-        return new TextEncoder().encode("t0");
-      case "transfer-started":
-        return new TextEncoder().encode("t1");
-      case "transfer-chunk":
-        return new Uint8Array([
-          ...new TextEncoder().encode("t2"),
-          ...message.value,
-        ]);
-      case "transfer-stats":
-        return new Uint8Array([
-          ...new TextEncoder().encode("t3"),
-          ...stringify([
-            message.value.currentIndex,
-            message.value.totalFiles,
-            message.value.transferredBytes,
-            message.value.totalBytes,
-          ]),
-        ]);
-      case "transfer-abort":
-        return new TextEncoder().encode("t4");
-      case "transfer-done":
-        return new TextEncoder().encode("t5");
-      case "preview-content":
-        return new Uint8Array([
-          ...new TextEncoder().encode("p1"),
-          ...stringify([message.value.totalCount, message.value.totalBytes]),
-        ]);
-    }
+    return new TextEncoder().encode(JSON.stringify(message));
   }
+
   static decode(data: Uint8Array): PeerMessage {
     if (data.byteLength < 1) {
       throw new Error("Invalid length");
     }
 
-    const decoder = new TextDecoder();
-    const id = data.slice(0, 2);
-    const type = decoder.decode(id);
+    if (data[0] === CHUNK_START) {
+      return {
+        type: "transfer-chunk",
+        value: data.slice(1),
+      };
+    } else if (data[0] === JSON_START) {
+      const decoder = new TextDecoder();
 
-    const rest = data.slice(2);
-    function json() {
-      return JSON.parse(decoder.decode(rest));
+      return JSON.parse(decoder.decode(data));
     }
 
-    switch (type) {
-      case "t0":
-        return { type: "transfer-start" };
-      case "t1":
-        return { type: "transfer-started" };
-      case "t2":
-        return { type: "transfer-chunk", value: rest };
-      case "t3": {
-        const [currentIndex, totalFiles, transferredBytes, totalBytes] = json();
-        return {
-          type: "transfer-stats",
-          value: { currentIndex, totalFiles, transferredBytes, totalBytes },
-        };
-      }
-      case "t4":
-        return { type: "transfer-abort" };
-      case "t5":
-        return { type: "transfer-done" };
-      case "p1": {
-        const [totalFiles, totalBytes] = json();
-        return {
-          type: "preview-content",
-          value: { totalCount: totalFiles, totalBytes },
-        };
-      }
-      default:
-        throw new Error(`Unknown message type: ${type}`);
-    }
+    throw new Error("Unknown payload");
   }
 }
