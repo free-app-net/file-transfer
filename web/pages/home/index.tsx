@@ -2,10 +2,12 @@ import "./style.css";
 
 import { secureId } from "../../utils/secureId";
 import { useLocation } from "preact-iso";
-import { isValidRoomHash, stringifyRoomParams } from "../../utils/roomParams";
+import { parseRoomParams, stringifyRoomParams } from "../../utils/roomParams";
+import { useState } from "preact/hooks";
 
 export default function HomePage() {
   const { route } = useLocation();
+  const [joinCode, setJoinCode] = useState("");
 
   function startRoom() {
     const myId = secureId();
@@ -23,20 +25,23 @@ export default function HomePage() {
 
   function onJoin(e: Event) {
     e.preventDefault();
-    const elem = (e.target as HTMLFormElement).elements[0]! as HTMLInputElement;
-    const code = elem.value.trim();
-
-    if (!code) {
+    const rawInput = joinCode.trim();
+    if (!rawInput) {
       return;
     }
 
-    if (!isValidRoomHash(code)) {
+    const value = parseRoomParams(rawInput);
+
+    if (!value) {
       alert(
         "The room code you entered is invalid. Please check and try again.",
       );
-      elem.value = "";
+      setJoinCode("");
       return;
     }
+
+    const code = stringifyRoomParams(value);
+
     route(`/room#${code}`);
   }
 
@@ -49,9 +54,10 @@ export default function HomePage() {
           Share files directly between browsers. No servers, no limits.
         </p>
         <p className="home-hero__description">
-          Create a secure room and share files instantly with anyone, anywhere.
-          Your files are transferred directly using WebRTC technology—fast,
-          private, and encrypted end-to-end.
+          Create a secure room and transfer files instantly with anyone,
+          anywhere. Your files are sent directly from device to device using
+          WebRTC technology, ensuring fast, private, and end-to-end encrypted
+          transfers.
         </p>
       </section>
 
@@ -100,11 +106,16 @@ export default function HomePage() {
                 autoCorrect="off"
                 // eslint-disable-next-line react/no-unknown-property
                 spellcheck={false}
+                onInput={(e) =>
+                  setJoinCode((e.target as HTMLInputElement).value)
+                }
+                value={joinCode}
               />
               <button
                 className="join-form__button"
                 type="submit"
                 data-testid="join-room-button"
+                disabled={!joinCode}
               >
                 Join Room
               </button>

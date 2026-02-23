@@ -4,13 +4,13 @@ export type RoomParams = {
   secret: string;
 };
 
-export function isValidRoomHash(hash: string) {
-  const params = parseRoomParams(hash);
-
-  return params !== null;
-}
-
 export function parseRoomParams(str: string) {
+  // remove the hash if present
+  const hashIndex = str.indexOf("#");
+  if (hashIndex !== -1) {
+    str = str.substring(hashIndex + 1);
+  }
+
   const myIdMatch = str.match(/m:([^;]+)/);
   const peerIdMatch = str.match(/p:([^;]+)/);
   const secretMatch = str.match(/s:([^;]+)/);

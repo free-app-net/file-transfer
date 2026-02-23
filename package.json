@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development --host",
-    "dev:test:union": "vitest",
+    "dev:test:unit": "vitest",
     "dev:test:e2e": "pnpm exec playwright test --ui",
     "build": "vite build",
     "test": "pnpm test:unit && pnpm test:server",
