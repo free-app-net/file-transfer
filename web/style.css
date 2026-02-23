@@ -175,7 +175,6 @@ main {
 
 /* Footer Section */
 .footer {
-    margin-top: var(--spacing-2xl);
     padding-top: var(--spacing-xl);
     border-top: 1px solid var(--color-border);
     text-align: center;
