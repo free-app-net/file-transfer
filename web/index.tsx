@@ -10,6 +10,7 @@ import {
 import "./style.css";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import { PrerenderResult } from "preact-iso/prerender";
 
 const NotFound = lazy(() => import("./pages/_404"));
 const Home = lazy(() => import("./pages/home/index"));
@@ -37,7 +38,8 @@ if (typeof window !== "undefined") {
   hydrate(<App />, document.getElementById("app")!);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function prerender(data: any) {
-  return await ssr(<App {...data} />);
+export async function prerender(): Promise<PrerenderResult> {
+  const res = await ssr(<App />);
+
+  return res;
 }
