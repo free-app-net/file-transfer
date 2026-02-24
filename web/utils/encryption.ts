@@ -7,11 +7,13 @@ export class Encryptor {
     if (this.key) return this.key;
 
     const encoder = new TextEncoder();
-    const keyData = encoder.encode(this.secret.padEnd(32, "0").slice(0, 32));
+    const keyBuffer = encoder.encode(this.secret);
+
+    const hash = await crypto.subtle.digest("SHA-256", keyBuffer);
 
     this.key = await crypto.subtle.importKey(
       "raw",
-      keyData,
+      hash,
       { name: "AES-GCM" },
       false,
       ["encrypt", "decrypt"],
