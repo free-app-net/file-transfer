@@ -85,28 +85,22 @@ export class BetterPeerChannel implements IPeerChannel {
     return remaining <= 0;
   }
 
-  write(msg: PeerMessage): boolean {
+  write(msg: PeerMessage) {
     if (!this.dataChannel) {
-      return false;
-      // throw new Error("Assertion failed: no dataChannel");
+      return;
     }
 
     // FIXME: handle this as an error!
     if (this.dataChannel.readyState !== "open") {
       this.handleError(new Error("connection_interrupted"));
       console.error("dataChannel", { dataChannel: this.dataChannel });
-      return false;
-      // throw new Error("Assertion failed: dataChannel is not open");
+      return;
     }
 
     const encoded = TransferProtocol.encode(msg);
 
-    const continueWriting = !this.hasBackpressure();
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.dataChannel.send(encoded as any);
-
-    return continueWriting;
   }
 
   private handleError(anyError: unknown) {

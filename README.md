@@ -25,6 +25,7 @@ TODO: tutorial here
 
 
 ## TODOS:
- - Errors dont display as such
- - Abrupt disconnect messes up error handling (stuck at transferring)
+ - Better error handling
+ - Abrupt disconnect messes up error handling (stuck at transferring??)
  - Currupted file transfers?
+ - More UI information: dont close this window. Reload the browser on errors. You are directly connected to peers.

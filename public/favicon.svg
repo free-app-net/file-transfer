@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f0f14;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="2" y="2" width="60" height="60" rx="14" ry="14" fill="url(#bg)" />
+  <rect
+        x="2"
+        y="2"
+        width="60"
+        height="60"
+        rx="14"
+        ry="14"
+        fill="none"
+        stroke="#24242e"
+        stroke-width="1.5"
+    />
+
+  <!-- Center ring (connection) -->
+  <circle
+        cx="32"
+        cy="32"
+        r="17.5"
+        fill="none"
+        stroke="#e8e8ee"
+        stroke-width="3"
+    />
+
+  <!-- Left peer node -->
+  <circle cx="17" cy="32" r="10" fill="#5a5ff5" />
+  <!-- <circle cx="16" cy="32" r="2" fill="#e8e8ee" /> -->
+
+  <!-- Right peer node -->
+  <circle cx="47" cy="32" r="10" fill="#5a5ff5" />
+  <!-- <circle cx="48" cy="32" r="2" fill="#e8e8e8" /> -->
+
+</svg>

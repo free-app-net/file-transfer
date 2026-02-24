@@ -24,7 +24,5 @@ export interface IPeerChannel {
   start(): void;
   stop(): void;
 
-  // if true is returned, continue sending
-  // if false is returned, backpressure is encountered. Backoff until drain event
-  write(msg: PeerMessage): boolean;
+  write(msg: PeerMessage): void;
 }
