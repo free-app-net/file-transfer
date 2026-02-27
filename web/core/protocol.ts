@@ -1,20 +1,6 @@
+import { TransferStats } from "./transferStats";
+
 export type TransferStatus = "idle" | "transfer" | "done" | "aborted";
-
-export type TransferStats = {
-  currentIndex: number;
-  totalFiles: number;
-  transferredBytes: number;
-  totalBytes: number;
-};
-
-export function zeroTransferStats(): TransferStats {
-  return {
-    currentIndex: 0,
-    totalFiles: 0,
-    transferredBytes: 0,
-    totalBytes: 0,
-  };
-}
 
 export type PreviewContent = {
   totalCount: number;

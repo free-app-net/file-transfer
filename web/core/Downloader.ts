@@ -1,11 +1,6 @@
 import { ValueSubscriber } from "../utils/ValueSubscriber";
-import {
-  PeerMessage,
-  TransferStats,
-  TransferStatus,
-  zeroTransferStats,
-} from "./protocol";
-import { AsyncZipDeflate, Zip } from "fflate/browser";
+import { PeerMessage, TransferStatus } from "./protocol";
+import { TransferStats, zeroTransferStats } from "./transferStats";
 import { IPeerChannel } from "./WebRTC/types";
 
 export class Downloader {

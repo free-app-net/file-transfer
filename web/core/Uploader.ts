@@ -1,9 +1,10 @@
 import { Zip, ZipDeflate } from "fflate/browser";
 
-import { PeerMessage, TransferStats, TransferStatus } from "./protocol";
+import { PeerMessage, TransferStatus } from "./protocol";
 import { ValueSubscriber } from "../utils/ValueSubscriber";
 import { IPeerChannel } from "./WebRTC/types";
 import { ChunkedWriter } from "./ChunkedWriter";
+import { TransferStats, transferStatsFromFiles } from "./transferStats";
 
 const CHUNK_SIZE = 2 << 15; // 65kb
 
@@ -15,8 +16,7 @@ export class Uploader {
 
   status = new ValueSubscriber<TransferStatus>("idle");
 
-  private totalProcessedBytes = 0;
-  private currentFileIndex = 0;
+  private _stats: TransferStats = transferStatsFromFiles([]);
 
   private current: {
     status: "transfer" | "backpressure" | "abort" | "done";
@@ -36,28 +36,8 @@ export class Uploader {
     return this.peerChannel.hasBackpressure();
   }
 
-  // TODO: for some reason this does not count duplicate file bytes
-  get totalSizeBytes(): number {
-    // TODO: pls cache
-    return this.files.reduce((acc, file) => acc + file.size, 0);
-  }
-
-  get totalFileCount(): number {
-    return this.files.length;
-  }
-
-  getStats(): TransferStats {
-    return {
-      currentIndex: this.currentFileIndex,
-      totalFiles: this.totalFileCount,
-      transferredBytes: this.totalProcessedBytes,
-      totalBytes: this.totalSizeBytes,
-    };
-  }
-
-  private resetStats() {
-    this.currentFileIndex = 0;
-    this.totalProcessedBytes = 0;
+  getStats() {
+    return this._stats;
   }
 
   getFiles() {
@@ -69,7 +49,7 @@ export class Uploader {
       throw new Error("Cannot set files while uploading");
     }
     this.files = files;
-    this.resetStats();
+    this._stats = transferStatsFromFiles(files);
   }
 
   stop() {
@@ -119,16 +99,17 @@ export class Uploader {
     });
     this.peerChannel.write({
       type: "transfer-stats",
-      value: this.getStats(),
+      value: this._stats,
     });
     this.progressInterval = setInterval(() => {
       this.peerChannel.write({
         type: "transfer-stats",
-        value: this.getStats(),
+        value: this._stats,
       });
     }, this.PROGRESS_EVERY_MS);
 
-    this.resetStats();
+    this._stats.currentIndex = 0;
+    this._stats.transferredBytes = 0;
 
     this.initCurrent();
 
@@ -179,9 +160,9 @@ export class Uploader {
       this.current.isReading = false;
 
       if (readRes.done) {
-        this.currentFileIndex++;
+        this._stats.currentIndex++;
 
-        if (this.currentFileIndex === this.files.length) {
+        if (this._stats.currentIndex === this.files.length) {
           this.requestZipEnd("done");
           return;
         }
@@ -189,7 +170,7 @@ export class Uploader {
         // close deflate
         this.current.deflate.push(new Uint8Array(0), true);
 
-        const file = this.files[this.currentFileIndex]!;
+        const file = this.files[this._stats.currentIndex]!;
 
         // update the reader and deflate to the next file
         this.current.reader = this.createReader(file);
@@ -202,7 +183,7 @@ export class Uploader {
 
       const value = readRes.value;
 
-      this.totalProcessedBytes += value.byteLength;
+      this._stats.transferredBytes += value.byteLength;
 
       this.current.deflate.push(value);
 
@@ -284,7 +265,7 @@ export class Uploader {
 
         this.peerChannel.write({
           type: "transfer-stats",
-          value: this.getStats(),
+          value: this._stats,
         });
         break;
       default:
@@ -296,7 +277,6 @@ export class Uploader {
 
   private onDrain() {
     if (!this.current) {
-      console.warn("ONDRAIN: current not initialized");
       return;
     }
 

@@ -29,3 +29,7 @@ TODO: tutorial here
  - Abrupt disconnect messes up error handling (stuck at transferring??)
  - Currupted file transfers?
  - More UI information: dont close this window. Reload the browser on errors. You are directly connected to peers.
+
+ 
+ ## Errors:
+ - Unexpected error: Failed to addIceCandidate

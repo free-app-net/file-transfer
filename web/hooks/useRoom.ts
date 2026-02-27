@@ -4,11 +4,7 @@ import { stringifyRoomParams } from "../utils/roomParams";
 import { useRoomParams } from "./useRoomParams";
 import { Core, emptyPeerFiles, FullFilesState } from "../core/Core";
 import { PeerConnectionStatus } from "../core/WebRTC/types";
-import {
-  TransferStats,
-  TransferStatus,
-  zeroTransferStats,
-} from "../core/protocol";
+import { TransferStats, TransferStatus, zeroTransferStats } from "../core";
 import { applicationErrorToText } from "../core/applicationError";
 import { usePreventNavigation } from "./usePreventNavigation";
 
