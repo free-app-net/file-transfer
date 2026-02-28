@@ -119,6 +119,15 @@ test("transfer files", async ({ browser }) => {
     "Completed",
   );
 
+  await expect(page1.getByTestId("transfer-progress-percentage")).toHaveText([
+    "100%",
+    "0%",
+  ]);
+  await expect(page2.getByTestId("transfer-progress-percentage")).toHaveText([
+    "0%",
+    "100%",
+  ]);
+
   const download = await downloadPromise;
   // download.saveAs("downloaded.zip");
 

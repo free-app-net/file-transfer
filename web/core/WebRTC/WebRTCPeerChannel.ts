@@ -143,7 +143,7 @@ export class WebRTCPeerChannel implements PeerChannel {
   }
 
   private setupDataChannel() {
-    const dataChannel = this.peer!.getDataChannel("TEST")!;
+    const dataChannel = this.peer!.getDataChannel("fpps")!;
 
     dataChannel.binaryType = "arraybuffer";
     dataChannel.bufferedAmountLowThreshold = this.backpressureAmount;

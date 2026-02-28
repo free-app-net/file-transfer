@@ -27,7 +27,12 @@ export function TransferProgress({
   return (
     <div className="transfer-progress">
       <div className="transfer-progress__info">
-        <span className="transfer-progress__percentage">{progressText}</span>
+        <span
+          data-testid="transfer-progress-percentage"
+          className="transfer-progress__percentage"
+        >
+          {progressText}
+        </span>
         <span className="transfer-progress__stats">
           {transferStats.currentIndex} / {transferStats.totalFiles} files ·{" "}
           {formatSize(transferStats.transferredBytes)} /{" "}
