@@ -3,9 +3,9 @@ import { Zip, ZipPassThrough } from "fflate/browser";
 import { PeerMessage, TransferStatus } from "./protocol";
 import { ValueSubscriber } from "../utils/ValueSubscriber";
 import { PeerChannel } from "./WebRTC/types";
-import { ChunkedWriter } from "./ChunkedWriter";
+import { BufferedWriter } from "./BufferedWriter";
 import { TransferStats, transferStatsFromFiles } from "./TransferStats";
-import { TransferSpeedValue, TransferSpeed } from "./TransferSpeed";
+import { TransferSpeed } from "./TransferSpeed";
 
 const CHUNK_SIZE = 2 << 15; // 65kb
 
@@ -24,7 +24,7 @@ export class Uploader {
     status: "transfer" | "backpressure" | "abort" | "done";
     isReading: boolean;
     zip: Zip;
-    bufferedWriter: ChunkedWriter;
+    bufferedWriter: BufferedWriter;
     reader: ReadableStreamDefaultReader<Uint8Array<ArrayBufferLike>>;
     deflate: ZipPassThrough;
   } | null = null;
@@ -205,7 +205,7 @@ export class Uploader {
     }
 
     // create the current
-    const bufferedWriter = new ChunkedWriter(CHUNK_SIZE, (data) => {
+    const bufferedWriter = new BufferedWriter(CHUNK_SIZE, (data) => {
       this.peerChannel.write({
         type: "transfer-chunk",
         value: data,

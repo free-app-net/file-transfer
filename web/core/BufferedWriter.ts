@@ -1,4 +1,4 @@
-export class ChunkedWriter {
+export class BufferedWriter {
   private buffer: Uint8Array;
   private pos = 0;
 
@@ -12,14 +12,12 @@ export class ChunkedWriter {
   write(chunk: Uint8Array): void {
     // optimization for large chunks
     if (this.pos === 0 && chunk.byteLength >= this.chunkSize) {
-      console.log("Writing large chunk of size", chunk.byteLength);
       this.underlyingWrite(chunk);
       return;
     }
 
-    // if we can buffer
-    if (this.pos + chunk.byteLength < this.chunkSize) {
-      // buffer
+    // if we can buffer, then buffer
+    if (this.pos + chunk.byteLength <= this.chunkSize) {
       this.buffer.set(chunk, this.pos);
       this.pos += chunk.byteLength;
       return;
