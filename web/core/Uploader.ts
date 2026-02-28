@@ -2,7 +2,7 @@ import { Zip, ZipDeflate } from "fflate/browser";
 
 import { PeerMessage, TransferStatus } from "./protocol";
 import { ValueSubscriber } from "../utils/ValueSubscriber";
-import { IPeerChannel } from "./WebRTC/types";
+import { PeerChannel } from "./WebRTC/types";
 import { ChunkedWriter } from "./ChunkedWriter";
 import {
   makeCalcTransferSpeed,
@@ -35,7 +35,7 @@ export class Uploader {
     calcSpeed: CalcTransferSpeed;
   } | null = null;
 
-  constructor(private peerChannel: IPeerChannel) {
+  constructor(private peerChannel: PeerChannel) {
     peerChannel.listenOnMessage(this.onPeerMessage.bind(this));
     peerChannel.listenOnDrain(this.onDrain.bind(this));
   }

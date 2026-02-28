@@ -7,7 +7,7 @@ import {
   TransferStats,
   zeroTransferStats,
 } from "./transferStats";
-import { IPeerChannel } from "./WebRTC/types";
+import { PeerChannel } from "./WebRTC/types";
 
 export class Downloader {
   status = new ValueSubscriber<TransferStatus>("idle");
@@ -17,7 +17,7 @@ export class Downloader {
   private speed: TransferSpeed | null = null;
   private calcSpeed: CalcTransferSpeed | null = null;
 
-  constructor(private peerChannel: IPeerChannel) {
+  constructor(private peerChannel: PeerChannel) {
     peerChannel.listenOnMessage((msg) => {
       this.onPeerMessage(msg);
     });

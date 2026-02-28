@@ -1,11 +1,11 @@
 import { ApplicationError } from "./applicationError";
 import { PeerMessage, TransferProtocol } from "./protocol";
-import { IPeerChannel } from "./WebRTC/types";
+import { PeerChannel } from "./WebRTC/types";
 
 const maxBackpressure = 1 << 18; // 256kb
 const drainMs = 10;
 
-class TestPeerChannel implements IPeerChannel {
+class TestPeerChannel implements PeerChannel {
   constructor(
     private parent: TestPeerChannels,
     private index: number,

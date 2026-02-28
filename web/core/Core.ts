@@ -5,8 +5,7 @@ import { ValueSubscriber } from "../utils/ValueSubscriber";
 import { parseFile } from "../utils/parseFile";
 import { Uploader } from "./Uploader";
 import { Downloader } from "./Downloader";
-import { BetterPeerChannel } from "./WebRTC/BetterPeerChannel";
-import { SignalingSSE } from "./WebRTC/SignalingSSE";
+import { WebRTCPeerChannel, SignalingSSE } from "./WebRTC";
 import { ApplicationError } from "./applicationError";
 import { MultiSubscriber } from "../utils/MultiSubscriber";
 import { Encryptor } from "../utils/encryption";
@@ -40,7 +39,7 @@ export function emptyPeerFiles(): FullFilesState {
 
 // core implementation, like a room manager. Name TDB
 export class Core {
-  private betterPeerChannel: BetterPeerChannel;
+  private betterPeerChannel: WebRTCPeerChannel;
   // this should be a signal?
   connectionState = new ValueSubscriber<PeerConnectionStatus>("disconnected");
   error = new MultiSubscriber<ApplicationError>();
@@ -94,7 +93,7 @@ export class Core {
     const signaler = new SignalingSSE(roomParams.myId, roomParams.peerId);
     const encryptor = new Encryptor(roomParams.secret);
 
-    const betterPeerChannel = new BetterPeerChannel(signaler, encryptor);
+    const betterPeerChannel = new WebRTCPeerChannel(signaler, encryptor);
 
     betterPeerChannel.listenOnMessage((message) => {
       switch (message.type) {

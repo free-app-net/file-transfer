@@ -15,7 +15,7 @@ export interface Signaler {
   send(msg: string): void;
 }
 
-export interface IPeerChannel {
+export interface PeerChannel {
   isReady(): boolean;
   hasBackpressure(): boolean;
   listenOnMessage(cb: (msg: PeerMessage) => void): void;

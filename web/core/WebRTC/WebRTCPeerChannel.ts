@@ -2,7 +2,7 @@ import Peer from "peer-lite";
 import { PeerMessage, TransferProtocol } from "../protocol";
 import { MultiSubscriber } from "../../utils/MultiSubscriber";
 import { getIceServers } from "./iceServers";
-import { IPeerChannel, PeerConnectionStatus, Signaler } from "./types";
+import { PeerChannel, PeerConnectionStatus, Signaler } from "./types";
 import { ApplicationError, convertError } from "../applicationError";
 import { Encryptor } from "../../utils/encryption";
 
@@ -20,7 +20,7 @@ type UniversalSignal =
 
 // this is destroyed on error!
 // connects right away
-export class BetterPeerChannel implements IPeerChannel {
+export class WebRTCPeerChannel implements PeerChannel {
   private peer: Peer | null = null;
   private dataChannel: RTCDataChannel | null = null;
 
