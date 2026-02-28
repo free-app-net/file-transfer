@@ -1,4 +1,4 @@
-import { Zip, ZipDeflate } from "fflate/browser";
+import { Zip, ZipPassThrough } from "fflate/browser";
 
 import { PeerMessage, TransferStatus } from "./protocol";
 import { ValueSubscriber } from "../utils/ValueSubscriber";
@@ -31,7 +31,7 @@ export class Uploader {
     zip: Zip;
     bufferedWriter: ChunkedWriter;
     reader: ReadableStreamDefaultReader<Uint8Array<ArrayBufferLike>>;
-    deflate: ZipDeflate;
+    deflate: ZipPassThrough;
     calcSpeed: CalcTransferSpeed;
   } | null = null;
 
@@ -316,11 +316,7 @@ export class Uploader {
   }
 
   private createDeflate(file: File, zip: Zip) {
-    // TODO: dynamic level based on mime type
-    const deflate = new ZipDeflate(file.webkitRelativePath || file.name, {
-      level: 6,
-    });
-    // add to the zip
+    const deflate = new ZipPassThrough(file.webkitRelativePath || file.name);
     zip.add(deflate);
 
     return deflate;
