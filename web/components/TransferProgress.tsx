@@ -1,11 +1,11 @@
-import { TransferStats, TransferSpeed } from "../core";
+import { TransferStats, TransferSpeedValue } from "../core";
 import { formatDuration } from "../utils/formatDuration";
 import { formatSize } from "../utils/formatSize";
 import { formatSpeed } from "../utils/formatSpeed";
 
 type Props = {
   stats: TransferStats;
-  speed: TransferSpeed | null;
+  speed: TransferSpeedValue | null;
 };
 
 export function TransferProgress({

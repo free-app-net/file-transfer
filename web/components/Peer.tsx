@@ -1,5 +1,5 @@
 import { FullFilesState } from "../core/Core";
-import { TransferSpeed, TransferStats, TransferStatus } from "../core";
+import { TransferSpeedValue, TransferStats, TransferStatus } from "../core";
 import { formatSize } from "../utils/formatSize";
 import { TransferProgress } from "./TransferProgress";
 
@@ -7,7 +7,7 @@ type Props = {
   peerFiles: FullFilesState;
   downloadStatus: TransferStatus;
   transferStats: TransferStats;
-  transferSpeed: TransferSpeed | null;
+  transferSpeed: TransferSpeedValue | null;
   startDownload: () => void;
   abortDownload: () => void;
 };

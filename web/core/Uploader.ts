@@ -4,13 +4,8 @@ import { PeerMessage, TransferStatus } from "./protocol";
 import { ValueSubscriber } from "../utils/ValueSubscriber";
 import { PeerChannel } from "./WebRTC/types";
 import { ChunkedWriter } from "./ChunkedWriter";
-import {
-  makeCalcTransferSpeed,
-  TransferSpeed,
-  CalcTransferSpeed,
-  TransferStats,
-  transferStatsFromFiles,
-} from "./transferStats";
+import { TransferStats, transferStatsFromFiles } from "./TransferStats";
+import { TransferSpeedValue, TransferSpeed } from "./TransferSpeed";
 
 const CHUNK_SIZE = 2 << 15; // 65kb
 
@@ -23,7 +18,7 @@ export class Uploader {
   status = new ValueSubscriber<TransferStatus>("idle");
 
   private stats: TransferStats = transferStatsFromFiles([]);
-  private speed: TransferSpeed | null = null;
+  private speed = new TransferSpeed();
 
   private current: {
     status: "transfer" | "backpressure" | "abort" | "done";
@@ -32,7 +27,6 @@ export class Uploader {
     bufferedWriter: ChunkedWriter;
     reader: ReadableStreamDefaultReader<Uint8Array<ArrayBufferLike>>;
     deflate: ZipPassThrough;
-    calcSpeed: CalcTransferSpeed;
   } | null = null;
 
   constructor(private peerChannel: PeerChannel) {
@@ -49,7 +43,7 @@ export class Uploader {
   }
 
   getSpeed() {
-    return this.speed;
+    return this.speed.value;
   }
 
   getFiles() {
@@ -108,13 +102,11 @@ export class Uploader {
 
     this.peerChannel.write({
       type: "transfer-started",
-    });
-    this.peerChannel.write({
-      type: "transfer-stats",
       value: this.stats,
     });
+
     this.progressInterval = setInterval(() => {
-      this.speed = this.current?.calcSpeed(this.stats.transferredBytes) ?? null;
+      this.speed.tick(this.stats.transferredBytes);
 
       this.peerChannel.write({
         type: "transfer-stats",
@@ -124,6 +116,8 @@ export class Uploader {
 
     this.stats.currentIndex = 0;
     this.stats.transferredBytes = 0;
+
+    this.speed.reset(this.stats.totalBytes);
 
     this.initCurrent();
 
@@ -243,7 +237,6 @@ export class Uploader {
       zip,
       reader: this.createReader(file),
       deflate: this.createDeflate(file, zip),
-      calcSpeed: makeCalcTransferSpeed(this.stats.totalBytes),
     };
   }
 
@@ -266,6 +259,7 @@ export class Uploader {
     if (this.progressInterval) {
       clearInterval(this.progressInterval);
     }
+    this.speed.reset(0);
 
     switch (this.current.status) {
       case "abort":

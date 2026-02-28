@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import { FullFilesState } from "../core/Core";
-import { TransferSpeed, TransferStats, TransferStatus } from "../core";
+import { TransferSpeedValue, TransferStats, TransferStatus } from "../core";
 import { formatSize } from "../utils/formatSize";
 import { TransferProgress } from "./TransferProgress";
 
@@ -8,7 +8,7 @@ type Props = {
   peerFiles: FullFilesState;
   uploadStatus: TransferStatus;
   transferStats: TransferStats;
-  transferSpeed: TransferSpeed | null;
+  transferSpeed: TransferSpeedValue | null;
   addMyFiles: (files: File[]) => void;
   clearFiles: () => void;
   abortUpload: () => void;

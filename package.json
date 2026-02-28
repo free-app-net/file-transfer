@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --mode development --host",
     "dev:test": "vitest",
-    "build": "echo 'Building' &&  vite build",
+    "build": "vite build",
     "test": "vitest --run --coverage",
     "test:e2e": "echo 'Headless playwright fails. Running UI instead.' && pnpm exec playwright test --ui",
     "run:e2e": "pnpm build && PORT=4000 go run main.go",

@@ -5,7 +5,7 @@ import { useRoomParams } from "./useRoomParams";
 import { Core, emptyPeerFiles, FullFilesState } from "../core/Core";
 import { PeerConnectionStatus } from "../core/WebRTC/types";
 import {
-  TransferSpeed,
+  TransferSpeedValue,
   TransferStats,
   TransferStatus,
   zeroTransferStats,
@@ -35,8 +35,10 @@ export function useRoom() {
   const [downloadStats, setDownloadStats] =
     useState<TransferStats>(zeroTransferStats());
 
-  const [uploadSpeed, setUploadSpeed] = useState<TransferSpeed | null>(null);
-  const [downloadSpeed, setDownloadSpeed] = useState<TransferSpeed | null>(
+  const [uploadSpeed, setUploadSpeed] = useState<TransferSpeedValue | null>(
+    null,
+  );
+  const [downloadSpeed, setDownloadSpeed] = useState<TransferSpeedValue | null>(
     null,
   );
 

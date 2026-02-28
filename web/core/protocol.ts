@@ -1,4 +1,4 @@
-import { TransferStats } from "./transferStats";
+import { TransferStats } from "./TransferStats";
 
 export type TransferStatus = "idle" | "transfer" | "done" | "aborted";
 
@@ -9,7 +9,7 @@ export type PreviewContent = {
 
 // TODO: send speed updates with stats
 export type PeerMessage =
-  | { type: "transfer-started" }
+  | { type: "transfer-started"; value: TransferStats }
   | { type: "transfer-start" }
   | { type: "transfer-chunk"; value: Uint8Array }
   | { type: "transfer-stats"; value: TransferStats }

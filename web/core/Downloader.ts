@@ -1,12 +1,7 @@
 import { ValueSubscriber } from "../utils/ValueSubscriber";
 import { PeerMessage, TransferStatus } from "./protocol";
-import {
-  CalcTransferSpeed,
-  makeCalcTransferSpeed,
-  TransferSpeed,
-  TransferStats,
-  zeroTransferStats,
-} from "./transferStats";
+import { TransferSpeed } from "./TransferSpeed";
+import { TransferStats, zeroTransferStats } from "./TransferStats";
 import { PeerChannel } from "./WebRTC/types";
 
 export class Downloader {
@@ -14,8 +9,7 @@ export class Downloader {
   private stats: TransferStats = zeroTransferStats();
   private writer: WritableStreamDefaultWriter<Uint8Array> | null = null;
 
-  private speed: TransferSpeed | null = null;
-  private calcSpeed: CalcTransferSpeed | null = null;
+  private speed = new TransferSpeed();
 
   constructor(private peerChannel: PeerChannel) {
     peerChannel.listenOnMessage((msg) => {
@@ -28,7 +22,7 @@ export class Downloader {
   }
 
   getSpeed() {
-    return this.speed;
+    return this.speed.value;
   }
 
   private resetStatsProgress() {
@@ -78,6 +72,9 @@ export class Downloader {
       case "transfer-started":
         this.status.setValue("transfer");
 
+        this.stats = message.value;
+        this.speed.reset(message.value.totalBytes);
+
         break;
 
       case "transfer-chunk":
@@ -99,10 +96,8 @@ export class Downloader {
         break;
       case "transfer-stats":
         this.stats = message.value;
-        if (!this.calcSpeed) {
-          this.calcSpeed = makeCalcTransferSpeed(message.value.totalBytes);
-        }
-        this.speed = this.calcSpeed(message.value.transferredBytes);
+
+        this.speed.tick(message.value.transferredBytes);
         break;
       case "transfer-abort":
         if (this.status.value === "transfer") {
@@ -154,8 +149,7 @@ export class Downloader {
   }
 
   private transferFinished() {
-    this.speed = null;
-    this.calcSpeed = null;
+    this.speed.reset(0);
   }
 
   dispose() {
