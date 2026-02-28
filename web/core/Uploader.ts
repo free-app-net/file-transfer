@@ -36,7 +36,7 @@ export class Uploader {
   } | null = null;
 
   constructor(private peerChannel: IPeerChannel) {
-    peerChannel.listenOnMessage(this.onData.bind(this));
+    peerChannel.listenOnMessage(this.onPeerMessage.bind(this));
     peerChannel.listenOnDrain(this.onDrain.bind(this));
   }
 
@@ -70,7 +70,7 @@ export class Uploader {
     this.abortTransfer();
   }
 
-  private onData(message: PeerMessage) {
+  private onPeerMessage(message: PeerMessage) {
     switch (message.type) {
       case "transfer-start":
         this.startTransfer();

@@ -77,6 +77,7 @@ export class Downloader {
         break;
       case "transfer-started":
         this.status.setValue("transfer");
+
         break;
 
       case "transfer-chunk":
@@ -101,7 +102,6 @@ export class Downloader {
         if (!this.calcSpeed) {
           this.calcSpeed = makeCalcTransferSpeed(message.value.totalBytes);
         }
-
         this.speed = this.calcSpeed(message.value.transferredBytes);
         break;
       case "transfer-abort":

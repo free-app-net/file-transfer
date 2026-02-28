@@ -7,6 +7,7 @@ export type PreviewContent = {
   totalBytes: number;
 };
 
+// TODO: send speed updates with stats
 export type PeerMessage =
   | { type: "transfer-started" }
   | { type: "transfer-start" }
