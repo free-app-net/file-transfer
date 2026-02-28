@@ -22,29 +22,52 @@ export function TransferProgress({
     transferStats.totalBytes,
   );
 
-  const isActive = transferStats.transferredBytes > 0 && progressRatio < 1;
+  const isActive = transferSpeed !== null;
+
+  const speedText = transferSpeed
+    ? formatSpeed(transferSpeed.speedBytesPerSecond)
+    : "---";
+
+  const etaText = transferSpeed
+    ? formatDuration(transferSpeed.remainingSeconds)
+    : "---";
 
   return (
     <div className="transfer-progress">
-      <div className="transfer-progress__info">
+      <div className="transfer-progress__header">
         <span
           data-testid="transfer-progress-percentage"
           className="transfer-progress__percentage"
         >
           {progressText}
         </span>
-        <span className="transfer-progress__stats">
-          {transferStats.currentIndex} / {transferStats.totalFiles} files ·{" "}
-          {formatSize(transferStats.transferredBytes)} /{" "}
-          {formatSize(transferStats.totalBytes)} ·{" "}
-          {transferSpeed
-            ? formatSpeed(transferSpeed.speedBytesPerSecond)
-            : "---"}{" "}
-          ·{" "}
-          {transferSpeed
-            ? formatDuration(transferSpeed.remainingSeconds)
-            : "---"}
-        </span>
+        <div className="transfer-progress__stats">
+          <span className="transfer-progress__stat-row">
+            <span className="transfer-progress__stat-label">Files</span>
+            <span className="transfer-progress__stat-value">
+              {transferStats.currentIndex} / {transferStats.totalFiles}
+            </span>
+            <span className="transfer-progress__stat-sep">·</span>
+            <span className="transfer-progress__stat-label">Progress</span>
+            <span className="transfer-progress__stat-value">
+              {formatSize(transferStats.transferredBytes)} /{" "}
+              {formatSize(transferStats.totalBytes)}
+            </span>
+          </span>
+          <span className="transfer-progress__stat-row">
+            {isActive && (
+              <>
+                <span className="transfer-progress__stat-label">Speed</span>
+                <span className="transfer-progress__stat-value">
+                  {speedText}
+                </span>
+                <span className="transfer-progress__stat-sep">·</span>
+                <span className="transfer-progress__stat-label">ETA</span>
+                <span className="transfer-progress__stat-value">{etaText}</span>
+              </>
+            )}
+          </span>
+        </div>
       </div>
       <div className="transfer-progress__bar-container">
         <div

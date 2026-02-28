@@ -222,10 +222,10 @@
     gap: var(--spacing-xs);
 }
 
-.transfer-progress__info {
+.transfer-progress__header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-xs);
 }
@@ -239,12 +239,33 @@
 }
 
 .transfer-progress__stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+}
+
+.transfer-progress__stat-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
     font-size: var(--font-size-xs);
-    color: var(--color-text-tertiary);
     font-family: var(--font-family-mono);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+}
+
+.transfer-progress__stat-label {
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+}
+
+.transfer-progress__stat-value {
+    color: var(--color-text-secondary);
+}
+
+.transfer-progress__stat-sep {
+    color: var(--color-text-tertiary);
 }
 
 .transfer-progress__bar-container {
@@ -392,15 +413,14 @@
         flex-direction: column;
     }
 
-    .transfer-progress__info {
+    .transfer-progress__header {
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing-xs);
     }
 
     .transfer-progress__stats {
-        font-size: var(--font-size-xs);
-        white-space: normal;
+        align-items: flex-start;
     }
 }
 
