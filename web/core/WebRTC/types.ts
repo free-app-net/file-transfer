@@ -21,4 +21,5 @@ export interface PeerChannel {
   stop(): void;
 
   write(msg: PeerMessage): boolean;
+  writeAsync(msg: PeerMessage): Promise<void>;
 }

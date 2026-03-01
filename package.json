@@ -23,6 +23,7 @@
   "packageManager": "pnpm@10.23.0",
   "dependencies": {
     "@preact/signals": "^2.5.1",
+    "client-zip": "^2.5.0",
     "fflate": "^0.8.2",
     "json-or-binary": "^0.9.9",
     "nanoid": "^5.1.6",

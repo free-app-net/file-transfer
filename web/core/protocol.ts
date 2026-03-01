@@ -7,6 +7,11 @@ export type PreviewContent = {
   totalBytes: number;
 };
 
+// export type TransferStart = {
+//   totalFiles: number;
+//   totalBytes: number;
+//   totalNetworkBytes: number;
+// };
 // TODO: send speed updates with stats
 export type PeerMessage =
   | { type: "transfer-started"; value: TransferStats }

@@ -122,6 +122,50 @@ export class WebRTCPeerChannel implements PeerChannel {
     return shouldContinue;
   }
 
+  writeAsync(msg: PeerMessage): Promise<void> {
+    if (!this.dataChannel) {
+      this.handleError(
+        new FatalError("Data channel does not exist", "connection_interrupted"),
+      );
+      console.error("dataChannel 1", { dataChannel: this.dataChannel });
+
+      throw new Error("BLAH 1");
+    }
+
+    if (this.dataChannel.readyState !== "open") {
+      this.handleError(
+        new FatalError(
+          "WebRTC connection is not open",
+          "connection_interrupted",
+        ),
+      );
+      console.error("dataChannel 2", { dataChannel: this.dataChannel });
+      throw new Error("BLAH 2");
+    }
+
+    const encoded = TransferProtocol.encode(msg);
+
+    const shouldContinue = !this.hasBackpressure();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.dataChannel.send(encoded as any);
+
+    if (shouldContinue) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+      console.log("Backpressuring");
+      this.dataChannel!.addEventListener(
+        "bufferedamountlow",
+        () => {
+          resolve();
+        },
+        { once: true },
+      );
+    });
+  }
+
   private handleError(anyError: unknown): void {
     const applicationError = applicationErrorFromUnknown(anyError);
 

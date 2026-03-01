@@ -62,6 +62,31 @@ class TestPeerChannel implements PeerChannel {
     return shouldContinue;
   }
 
+  writeAsync(message: PeerMessage): Promise<void> {
+    if (!this._ready) {
+      throw new Error("Not ready");
+    }
+
+    const size = TransferProtocol.encode(message).byteLength;
+    this._remainingBytes -= size;
+
+    this._sendMessages.push(message);
+    this.parent.peerSent(this.index, message);
+
+    const shouldContinue = !this.hasBackpressure();
+    if (shouldContinue) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this._remainingBytes += size;
+
+        resolve();
+      }, drainMs);
+    });
+  }
+
   listenOnDrain(cb: () => void): void {
     this._onDrainedCallback = cb;
   }

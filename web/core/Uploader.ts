@@ -6,6 +6,7 @@ import { PeerChannel } from "./WebRTC/types";
 import { BufferedWriter } from "./BufferedWriter";
 import { TransferStats, transferStatsFromFiles } from "./TransferStats";
 import { TransferSpeed } from "./TransferSpeed";
+import { downloadZip, makeZip, predictLength } from "client-zip";
 
 const CHUNK_SIZE = 2 << 15; // 65kb
 const WRITE_BUFFER_SIZE = 70_000;
@@ -70,7 +71,8 @@ export class Uploader {
   private onPeerMessage(message: PeerMessage) {
     switch (message.type) {
       case "transfer-start":
-        this.startTransfer();
+        // this.startTransfer();
+        this.startTransferAsync();
         break;
       case "transfer-abort":
         if (this.status.value === "transfer") {
@@ -82,6 +84,110 @@ export class Uploader {
 
   dispose() {
     this.status.dispose();
+  }
+
+  private async startTransferAsync() {
+    if (!this.peerChannel.isReady()) {
+      throw new Error("Peer channel is not ready to upload");
+    }
+
+    if (this.status.value === "transfer") {
+      throw new Error("Cannot start transfer: uploader is already uploading");
+    }
+
+    if (this.files.length === 0) {
+      throw new Error("No files to transfer");
+    }
+
+    const stream = makeZip(
+      this.files.map(
+        (file) => ({
+          name: file.webkitRelativePath || file.name,
+          size: file.size,
+          input: file,
+        }),
+        // new File(
+        //   [file],
+        //   // name a file
+        //   file.webkitRelativePath || file.name,
+        //   {
+        //     type: file.type,
+        //     lastModified: file.lastModified,
+        //   },
+        // ),
+      ),
+    );
+
+    const reader = stream
+      .pipeThrough(
+        new TransformStream(new ChunkSplitterTransformer(CHUNK_SIZE)),
+      )
+      .getReader();
+
+    this.progressInterval = setInterval(() => {
+      this.speed.tick(this.stats.transferredBytes);
+
+      // would be nice for the reciever to extrapolate this...
+      // reciever knows how long the payload is
+      this.peerChannel.write({
+        type: "transfer-stats",
+        value: this.stats,
+      });
+    }, this.PROGRESS_EVERY_MS);
+    this.stats.currentIndex = 0;
+    this.stats.transferredBytes = 0;
+    this.speed.reset(this.stats.totalBytes);
+
+    try {
+      const predicted = Number(predictLength(this.files));
+      const actual = this.stats.totalBytes;
+
+      console.log("file prediction", {
+        predicted,
+        actual,
+        difference: actual - predicted,
+      });
+
+      await this.peerChannel.writeAsync({
+        type: "transfer-started",
+        value: this.stats,
+      });
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        // the bytes a bit off the predicteced length, but its okay
+        this.stats.transferredBytes += value.byteLength;
+
+        await this.peerChannel.writeAsync({
+          type: "transfer-chunk",
+          value,
+        });
+      }
+
+      await this.peerChannel.writeAsync({
+        type: "transfer-done",
+      });
+
+      reader.releaseLock();
+
+      this.status.setValue("idle");
+    } catch (err) {
+      console.error("error while transferring");
+      this.status.setValue("idle"); // status of error is okay here?
+      stream.cancel(err);
+    } finally {
+      console.log("actually transferred", {
+        actual: this.stats.transferredBytes,
+      });
+
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+      }
+      // this.stats.transferredBytes = this.stats.totalBytes;
+      this.speed.reset(0);
+    }
   }
 
   private startTransfer() {
