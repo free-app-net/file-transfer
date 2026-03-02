@@ -34,8 +34,8 @@ export function TransferProgressDisplay({ progress }: Props) {
         >
           {progressText}
         </span>
-        <div className="transfer-progress__stats">
-          <span className="transfer-progress__stat-row">
+        {isActive && (
+          <div className="transfer-progress__stats">
             <span className="transfer-progress__stat-item">
               <span className="transfer-progress__stat-label">Progress</span>
               <span className="transfer-progress__stat-value">
@@ -43,8 +43,7 @@ export function TransferProgressDisplay({ progress }: Props) {
                 {formatSize(progress.totalBytes)}
               </span>
             </span>
-          </span>
-          <span className="transfer-progress__stat-row">
+            <span className="transfer-progress__stat-sep">·</span>
             <span className="transfer-progress__stat-item">
               <span className="transfer-progress__stat-label">Speed</span>
               <span className="transfer-progress__stat-value">{speedText}</span>
@@ -54,8 +53,8 @@ export function TransferProgressDisplay({ progress }: Props) {
               <span className="transfer-progress__stat-label">ETA</span>
               <span className="transfer-progress__stat-value">{etaText}</span>
             </span>
-          </span>
-        </div>
+          </div>
+        )}
       </div>
       <div className="transfer-progress__bar-container">
         <div
