@@ -13,6 +13,7 @@ import { Footer } from "./components/Footer";
 import { PrerenderResult } from "preact-iso/prerender";
 import { ToastContainer } from "react-toastify";
 import { Toast } from "./utils/toast";
+import { PreventNavigationProvider } from "./context/PreventNavigation";
 
 const NotFound = lazy(() => import("./pages/_404"));
 const Home = lazy(() => import("./pages/home/index"));
@@ -22,22 +23,24 @@ const About = lazy(() => import("./pages/about/index"));
 export function App() {
   return (
     <LocationProvider>
-      <Header />
-      <main>
-        <Router>
-          <Route path="/" component={Home} />
-          <Route path="/room" component={Room} />
-          <Route path="/about" component={About} />
-          <Route default component={NotFound} />
-        </Router>
-      </main>
-      <Footer />
-      <ToastContainer
-        position="top-center"
-        pauseOnHover
-        pauseOnFocusLoss
-        theme="dark"
-      />
+      <PreventNavigationProvider>
+        <Header />
+        <main>
+          <Router>
+            <Route path="/" component={Home} />
+            <Route path="/room" component={Room} />
+            <Route path="/about" component={About} />
+            <Route default component={NotFound} />
+          </Router>
+        </main>
+        <Footer />
+        <ToastContainer
+          position="top-center"
+          pauseOnHover
+          pauseOnFocusLoss
+          theme="dark"
+        />
+      </PreventNavigationProvider>
     </LocationProvider>
   );
 }

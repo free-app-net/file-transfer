@@ -9,7 +9,7 @@ import {
   TransferStatus,
   TransferProgress,
 } from "../core";
-import { usePreventNavigation } from "./usePreventNavigation";
+import { usePreventNavigation } from "../context/PreventNavigation";
 import { ApplicationError } from "../core/ApplicationError";
 
 const STATS_UPDATE_INTERVAL_MS = 500;
@@ -36,16 +36,21 @@ export function useRoom() {
     TransferProgress.zeroValue(),
   );
 
-  const [isTransferring, setIsTransferring] = useState(false);
+  const { activate, deactivate } = usePreventNavigation();
+
   useEffect(() => {
-    setIsTransferring(
-      downloadStatus === "transfer" || uploadStatus === "transfer",
-    );
+    // ugly but it works
+    const isTransferring =
+      downloadStatus === "transfer" || uploadStatus === "transfer";
+
+    if (isTransferring) {
+      activate(
+        "A transfer is in progress. Leaving this page will interrupt file sharing.",
+      );
+    } else {
+      deactivate();
+    }
   }, [downloadStatus, uploadStatus]);
-  usePreventNavigation(
-    "A transfer is in progress? Leaving this page will interrupt file sharing.",
-    isTransferring,
-  );
 
   useEffect(() => {
     const newCore = new Core(roomParams);

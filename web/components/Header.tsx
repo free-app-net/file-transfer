@@ -1,18 +1,28 @@
 import { useLocation } from "preact-iso";
+import { Anchor } from "./Anchor";
+import { usePreventNavigation } from "../context/PreventNavigation";
 
-// TODO: prevent navigation
 export function Header() {
   const { url } = useLocation();
+  const { isActive } = usePreventNavigation();
 
   return (
     <header>
       <nav>
-        <a href="/" className={url === "/" ? "active" : ""}>
+        <Anchor
+          preventNavigation={isActive ? "Transfer in progress" : null}
+          href="/"
+          className={url === "/" ? "active" : ""}
+        >
           Home
-        </a>
-        <a href="/about" className={url === "/about" ? "active" : ""}>
+        </Anchor>
+        <Anchor
+          preventNavigation={isActive ? "Transfer in progress" : null}
+          href="/about"
+          className={url === "/about" ? "active" : ""}
+        >
           About
-        </a>
+        </Anchor>
       </nav>
     </header>
   );
