@@ -18,13 +18,12 @@ COPY --from=web-builder /app/dist ./dist
 # No dependencies :)
 RUN CGO_ENABLED=0 go build -o main .
 
+# For build artifactors
+FROM scratch AS binaries
+COPY --from=go-builder /app/main /fpps
 
 # Deploy it
 FROM scratch AS runtime
 WORKDIR /app
 COPY --from=go-builder /app/main /fpps
-ENTRYPOINT ["/fpps"]
-
-# For build artifactors
-FROM scratch AS binaries
-COPY --from=go-builder /app/main /fpps
+CMD ["/fpps"]
