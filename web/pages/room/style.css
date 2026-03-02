@@ -216,10 +216,15 @@
 
 .transfer-progress__stats {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+}
+
+.transfer-progress__stat-row {
+    display: flex;
     align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 0.6rem;
     font-size: var(--font-size-xs);
     font-family: var(--font-family-mono);
 }
@@ -398,10 +403,13 @@
     }
 
     .transfer-progress__stats {
-        flex-direction: column;
         align-items: flex-start;
-        gap: 0.25rem;
         width: 100%;
+    }
+
+    .transfer-progress__stat-row {
+        flex-wrap: wrap;
+        row-gap: 0.4rem;
     }
 
     .transfer-progress__stat-sep {

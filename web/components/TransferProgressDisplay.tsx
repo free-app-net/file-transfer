@@ -36,22 +36,27 @@ export function TransferProgressDisplay({ progress }: Props) {
         </span>
         {isActive && (
           <div className="transfer-progress__stats">
-            <span className="transfer-progress__stat-item">
-              <span className="transfer-progress__stat-label">Progress</span>
-              <span className="transfer-progress__stat-value">
-                {formatSize(progress.transferredBytes)} /{" "}
-                {formatSize(progress.totalBytes)}
+            <span className="transfer-progress__stat-row">
+              <span className="transfer-progress__stat-item">
+                <span className="transfer-progress__stat-label">Progress</span>
+                <span className="transfer-progress__stat-value">
+                  {formatSize(progress.transferredBytes)} /{" "}
+                  {formatSize(progress.totalBytes)}
+                </span>
               </span>
             </span>
-            <span className="transfer-progress__stat-sep">·</span>
-            <span className="transfer-progress__stat-item">
-              <span className="transfer-progress__stat-label">Speed</span>
-              <span className="transfer-progress__stat-value">{speedText}</span>
-            </span>
-            <span className="transfer-progress__stat-sep">·</span>
-            <span className="transfer-progress__stat-item">
-              <span className="transfer-progress__stat-label">ETA</span>
-              <span className="transfer-progress__stat-value">{etaText}</span>
+            <span className="transfer-progress__stat-row">
+              <span className="transfer-progress__stat-item">
+                <span className="transfer-progress__stat-label">Speed</span>
+                <span className="transfer-progress__stat-value">
+                  {speedText}
+                </span>
+              </span>
+              <span className="transfer-progress__stat-sep">·</span>
+              <span className="transfer-progress__stat-item">
+                <span className="transfer-progress__stat-label">ETA</span>
+                <span className="transfer-progress__stat-value">{etaText}</span>
+              </span>
             </span>
           </div>
         )}
