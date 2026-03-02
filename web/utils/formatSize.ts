@@ -1,5 +1,4 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications#example_showing_files_size
-// TODO: sometimes this should undefined
 export function formatSize(numberOfBytes: number): string {
   if (numberOfBytes === 0) {
     return "0 B";

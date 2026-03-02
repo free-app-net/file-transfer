@@ -17,7 +17,7 @@ type RunOpts struct {
 }
 
 // TODO: limit body size
-// TODO: set timeouts for requests
+// TODO: set timeouts for requests (non-streaming)
 func Run(opts RunOpts) {
 
 	mux := http.NewServeMux()

@@ -18,7 +18,6 @@ export function TransferProgressDisplay({ progress }: Props) {
     progress.totalBytes,
   );
 
-  // TODO
   const isActive = !TransferProgress.isIdleValue(progress);
 
   const speedText = formatSpeed(progress.speedBytesPerSecond);

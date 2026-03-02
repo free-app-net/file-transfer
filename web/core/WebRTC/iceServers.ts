@@ -24,7 +24,8 @@ const iceServers: IceServers = [
   },
 ] as const;
 
-// TODO allow to exclude servers of the other peer
+// TODO: allow to exclude servers of the other peer
+// TODO: randomize server selection
 export function getIceServers(): IceServers {
   if (import.meta.env.DEV) {
     return [localDev, ...iceServers];

@@ -10,10 +10,9 @@
     "test": "vitest --run --coverage",
     "test:e2e": "echo 'Headless playwright fails. Running UI instead.' && pnpm exec playwright test --ui",
     "run:e2e": "pnpm build && PORT=4000 go run main.go",
-    "preview": "vite preview",
     "lint": "eslint",
     "check": "tsc --noEmit",
-    "server:run": "pnpm build && PORT=3000 go run main.go",
+    "preview": "pnpm build && PORT=3000 go run main.go",
     "server:test": "go test ./...",
     "server:dev": "PORT=6173 go run main.go",
     "server:build": "go build -o ./bin/server main.go"
@@ -24,7 +23,6 @@
   "dependencies": {
     "@preact/signals": "^2.5.1",
     "client-zip": "^2.5.0",
-    "fflate": "^0.8.2",
     "json-or-binary": "^0.9.9",
     "nanoid": "^5.1.6",
     "peer-lite": "^2.0.2",
@@ -37,6 +35,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "fflate": "^0.8.2",
     "@notwoods/eslint-config-preact": "^1.0.0",
     "@playwright/test": "^1.58.2",
     "@preact/preset-vite": "^2.10.2",

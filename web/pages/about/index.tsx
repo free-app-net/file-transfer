@@ -44,9 +44,9 @@ export default function AboutPage() {
           <h2 className="about-section__title">How It Works</h2>
           <p className="about-section__text">
             When you create a room, the application generates a unique code
-            invisible to us. Share this code with anyone you want to exchange
-            files with. When they join using the code, a direct WebRTC
-            connection is established between your browsers.
+            invisible to us. Share the link with the code with anyone you want
+            to exchange files with. When they join, a direct WebRTC connection
+            is established between your browsers.
           </p>
           <p className="about-section__text">
             Files are compressed and transferred directly between browsers. Your

@@ -7,7 +7,6 @@ type PlaywrightMemFile = {
   buffer: Buffer;
 };
 
-// TODO: in future, write to disk?
 export function generateTestFiles(args: {
   count: number;
   sizeBytes: number;
