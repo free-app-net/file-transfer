@@ -23,13 +23,19 @@ describe("TestPeerChannels", () => {
 
     vi.waitFor(() => {
       expect(testChannels.getReceivedMessages("b").length).toBe(1);
-      expect(testChannels.getReceivedMessages("b")[0]).toStrictEqual({
-        type: "transfer-done",
-      });
+      expect(testChannels.getReceivedMessages("b")[0]).toMatchInlineSnapshot(`
+        {
+          "type": "transfer-done",
+          "value": undefined,
+        }
+      `);
       expect(testChannels.getSentMessages("a").length).toBe(1);
-      expect(testChannels.getSentMessages("a")[0]).toStrictEqual({
-        type: "transfer-done",
-      });
+      expect(testChannels.getSentMessages("a")[0]).toMatchInlineSnapshot(`
+        {
+          "type": "transfer-done",
+          "value": undefined,
+        }
+      `);
     });
   });
 });
