@@ -79,10 +79,12 @@ describe("Uploader", { timeout: 10_000 }, () => {
   beforeEach(() => {
     testChannels = new TestPeerChannels(0.05);
 
-    uploader = new Uploader(testChannels.getPeerChannel("a"));
-    downloader = new Downloader(testChannels.getPeerChannel("b"));
-
     newWritableStream();
+
+    uploader = new Uploader(testChannels.getPeerChannel("a"));
+    downloader = new Downloader(testChannels.getPeerChannel("b"), () =>
+      writableStream.getWriter(),
+    );
   });
 
   it("should upload a file", async () => {
@@ -92,7 +94,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     expect(uploader.status.value).toBe("idle");
     expect(downloader.status.value).toBe("idle");
 
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");
@@ -114,7 +116,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     expect(uploader.status.value).toBe("idle");
     expect(downloader.status.value).toBe("idle");
 
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");
@@ -137,7 +139,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     expect(downloader.status.value).toBe("idle");
     expect(uploader.status.value).toBe("idle");
 
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");
@@ -162,7 +164,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     expect(uploader.status.value).toBe("idle");
     expect(downloader.status.value).toBe("idle");
 
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");
@@ -188,7 +190,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
       expect(uploader.status.value).toBe("idle");
       expect(downloader.status.value).toBe("idle");
 
-      downloader.start(writableStream);
+      downloader.start();
 
       await vi.waitUntil(() => uploader.status.value === "done", {
         timeout: 10_000,
@@ -214,7 +216,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     expect(uploader.status.value).toBe("idle");
     expect(downloader.status.value).toBe("idle");
 
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");
@@ -231,7 +233,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     uploader.setFiles([file2]);
 
     newWritableStream();
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");
@@ -248,7 +250,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     expect(uploader.status.value).toBe("idle");
     expect(downloader.status.value).toBe("idle");
 
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(
       () => {
@@ -271,7 +273,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     uploader.setFiles([file]);
 
     newWritableStream();
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");
@@ -288,7 +290,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     expect(uploader.status.value).toBe("idle");
     expect(downloader.status.value).toBe("idle");
 
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => downloader.status.value === "transfer", {
       timeout: 1000,
@@ -306,7 +308,7 @@ describe("Uploader", { timeout: 10_000 }, () => {
     uploader.setFiles([file]);
 
     newWritableStream();
-    downloader.start(writableStream);
+    downloader.start();
 
     await vi.waitUntil(() => uploader.status.value === "done");
     await vi.waitUntil(() => downloader.status.value === "done");

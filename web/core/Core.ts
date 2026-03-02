@@ -10,8 +10,7 @@ import { ApplicationError, FatalError } from "./ApplicationError";
 import { MultiSubscriber } from "../utils/MultiSubscriber";
 import { Encryptor } from "../utils/encryption";
 import { nanoid } from "nanoid";
-
-const BACKPRESSURE_AMOUNT = 1 << 20; // 1mb
+import { TRANSFER_BACKPRESSURE_BYTES } from "./consts";
 
 export type FileItem = {
   path: string;
@@ -92,7 +91,7 @@ export class Core {
     const peerChannel = new WebRTCPeerChannel(
       signaler,
       encryptor,
-      BACKPRESSURE_AMOUNT,
+      TRANSFER_BACKPRESSURE_BYTES,
     );
 
     peerChannel.listenOnMessage((message) => {
@@ -126,7 +125,11 @@ export class Core {
     });
 
     this.uploader = new Uploader(peerChannel);
-    this.downloader = new Downloader(peerChannel);
+    this.downloader = new Downloader(peerChannel, (size) =>
+      window.streamSaver
+        .createWriteStream("ffps_download.zip", { size })
+        .getWriter(),
+    );
 
     setTimeout(() => {
       peerChannel.start();
@@ -183,11 +186,7 @@ export class Core {
   }
 
   public startDownload() {
-    const writeStream = window.streamSaver.createWriteStream(
-      "download.zip",
-      {},
-    );
-    this.downloader.start(writeStream);
+    this.downloader.start();
   }
   public abortDownload() {
     this.downloader.abort();

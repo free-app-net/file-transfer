@@ -7,10 +7,10 @@ export function formatSize(numberOfBytes: number): string {
 
   const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   const exponent = Math.min(
-    Math.max(Math.floor(Math.log(numberOfBytes) / Math.log(1000)), 0),
+    Math.max(Math.floor(Math.log(numberOfBytes) / Math.log(1024)), 0),
     units.length - 1,
   );
-  const approx = numberOfBytes / 1000 ** exponent;
+  const approx = numberOfBytes / 1024 ** exponent;
   const output =
     exponent === 0
       ? `${numberOfBytes.toFixed(1)} B`

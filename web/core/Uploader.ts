@@ -4,9 +4,7 @@ import { PeerChannel } from "./WebRTC/types";
 import { TransferProgress } from "./TransferSpeed";
 import { makeZip, predictLength } from "client-zip";
 import { ChunkSplitterTransformer } from "./ChunkSplitterTransformer";
-
-const CHUNK_SIZE = 2 << 15; // 65kb
-const PROGRESS_EVERY_MS = 500;
+import { TRANSFER_CHUNK_BYTES, TRANSFER_PROGRESS_EVERY_MS } from "./consts";
 
 export class Uploader {
   private files: File[] = [];
@@ -74,7 +72,7 @@ export class Uploader {
     const predictedBytes = Number(predictLength(this.files));
 
     this.progress.reset(predictedBytes);
-    this.progress.startInterval(PROGRESS_EVERY_MS);
+    this.progress.startInterval(TRANSFER_PROGRESS_EVERY_MS);
 
     const stream = makeZip(
       this.files.map((file) => ({
@@ -86,7 +84,7 @@ export class Uploader {
 
     const reader = stream
       .pipeThrough(
-        new TransformStream(new ChunkSplitterTransformer(CHUNK_SIZE)),
+        new TransformStream(new ChunkSplitterTransformer(TRANSFER_CHUNK_BYTES)),
       )
       .getReader();
 
@@ -128,7 +126,7 @@ export class Uploader {
     } catch (err) {
       this.progress.reset(0);
 
-      console.error("error while transferring");
+      console.error("error while transferring", err);
       this.status.setValue("idle");
 
       reader.cancel(err);
