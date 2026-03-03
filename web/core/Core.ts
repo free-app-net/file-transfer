@@ -6,7 +6,7 @@ import { parseFile } from "../utils/parseFile";
 import { Uploader } from "./Uploader";
 import { Downloader } from "./Downloader";
 import { WebRTCPeerChannel, SignalingSSE } from "./WebRTC";
-import { ApplicationError, FatalError } from "./ApplicationError";
+import { ApplicationError } from "./ApplicationError";
 import { MultiSubscriber } from "../utils/MultiSubscriber";
 import { Encryptor } from "../utils/encryption";
 import { nanoid } from "nanoid";

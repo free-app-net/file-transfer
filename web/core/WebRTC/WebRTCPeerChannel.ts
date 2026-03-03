@@ -10,7 +10,6 @@ import {
   RestarableError,
 } from "../ApplicationError";
 import { Encryptor } from "../../utils/encryption";
-import { Err } from "../../helpers";
 
 const RECONNECT_DELAY = 1_000;
 
@@ -48,7 +47,7 @@ export class WebRTCPeerChannel implements PeerChannel {
   constructor(
     private signaler: Signaler,
     private encryptor: Encryptor,
-    private backpressureAmount: number = 1 << 20, // 1mb by default
+    private backpressureAmount: number,
   ) {}
 
   isReady(): boolean {
@@ -161,7 +160,7 @@ export class WebRTCPeerChannel implements PeerChannel {
   }
   writeWait(msg: PeerMessage): Promise<void> | null {
     if (!this.checkWrite()) {
-      return Promise.resolve();
+      return null;
     }
 
     const encoded = TransferProtocol.encode(msg);
@@ -211,7 +210,7 @@ export class WebRTCPeerChannel implements PeerChannel {
   }
 
   private _reset() {
-    console.warn("datachannel is reset!");
+    console.warn("RESETTING DATA CHANNEL");
     this._isReady = false;
     this.signaler.stop();
 
@@ -226,7 +225,7 @@ export class WebRTCPeerChannel implements PeerChannel {
   }
 
   dispose() {
-    console.warn("datachannel is disposed!");
+    console.warn("DATACHANNEL DISPOSED");
 
     this._reset();
     this._messageSubscribers.dispose();
@@ -234,6 +233,12 @@ export class WebRTCPeerChannel implements PeerChannel {
   }
 
   private setupDataChannel() {
+    this.peer!.addDataChannel("fpps", {
+      ordered: true,
+      maxRetransmits: undefined,
+      id: 99,
+    });
+
     const dataChannel = this.peer!.getDataChannel("fpps")!;
 
     dataChannel.binaryType = "arraybuffer";
@@ -256,7 +261,7 @@ export class WebRTCPeerChannel implements PeerChannel {
         this.onConnectionState("disconnected");
       }
 
-      console.error("DATACHANNEL CLOSED", {
+      console.warn("DATACHANNEL CLOSED", {
         dataChannel,
       });
     });
@@ -302,12 +307,6 @@ export class WebRTCPeerChannel implements PeerChannel {
 
     this.peer.on("connected", () => {
       console.log("PEER CONNECTED");
-
-      this.peer!.addDataChannel("fpps", {
-        ordered: true,
-        maxRetransmits: undefined,
-        id: 99,
-      });
 
       this.setupDataChannel();
     });
