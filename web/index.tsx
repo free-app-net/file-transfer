@@ -12,8 +12,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { PrerenderResult } from "preact-iso/prerender";
 import { ToastContainer } from "react-toastify";
-import { Toast } from "./utils/toast";
-import { PreventNavigationProvider } from "./context/PreventNavigation";
+import { TransferLockProvider } from "./context/TransferLock";
 
 const NotFound = lazy(() => import("./pages/_404"));
 const Home = lazy(() => import("./pages/home/index"));
@@ -23,7 +22,7 @@ const About = lazy(() => import("./pages/about/index"));
 export function App() {
   return (
     <LocationProvider>
-      <PreventNavigationProvider>
+      <TransferLockProvider>
         <Header />
         <main>
           <Router>
@@ -40,7 +39,7 @@ export function App() {
           pauseOnFocusLoss
           theme="dark"
         />
-      </PreventNavigationProvider>
+      </TransferLockProvider>
     </LocationProvider>
   );
 }

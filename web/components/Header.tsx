@@ -1,6 +1,6 @@
 import { useLocation } from "preact-iso";
 import { Anchor } from "./Anchor";
-import { usePreventNavigation } from "../context/PreventNavigation";
+import { usePreventNavigation } from "../context/TransferLock";
 
 export function Header() {
   const { url } = useLocation();
