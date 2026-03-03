@@ -198,7 +198,7 @@
 }
 
 .faq-item__answer-content p {
-    margin-bottom: var(--spacing-md);
+    margin: var(--spacing-md) 0;
 }
 
 .faq-item__answer-content p:last-child {

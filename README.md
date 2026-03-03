@@ -44,7 +44,7 @@ services:
       - PORT=3000
 ```
 
-Additionally, GitHub releases contain `linux amd64` banaries. Default port is 3000. 
+Additionally, GitHub releases contain `linux amd64` banary. Just run it. The default port is 3000. 
 
 ## Technologies
 
