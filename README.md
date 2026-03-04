@@ -65,8 +65,3 @@ Important dev commands are
 - `pnpm preview` - Launches the server the same way as after docker build at [localhost:3000](http://localhost:3000/)
 - `pnpm test` - Run unit tests
 - `pnpm test:e2e` - Launches end-to-end tests. Works only in UI mode, cannot be CI automated at the moment
-
-<!--## TODOS:
- - More UI information: dont close this window. Reload the browser on errors. You are directly connected to peers.-->
- <!--## Errors:
- - Unexpected error: Failed to addIceCandidate-->

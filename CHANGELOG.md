@@ -1,10 +1,11 @@
 # Changelog
 
 <!--
+Instructions:
 ## [Unreleased]
 - Put information here for next release
 
-## [0.0.5] - 2025-01-30
+## [VERSOIN] - DATE
 ### Added
 - New feature X
 
@@ -14,6 +15,11 @@
 
 ## [Unreleased]
 
-## [1.0.0] - 2026-03-02
+## [1.1.0] - 2026-03-04 
+- Signaling protocol reworked. Now room is a single ID
 
-First version published!
+## [1.0.1] - 2026-03-03
+- Minor UI improvements
+
+## [1.0.0] - 2026-03-02
+- First version published
