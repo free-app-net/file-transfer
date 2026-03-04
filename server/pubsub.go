@@ -4,64 +4,68 @@ import (
 	"sync"
 )
 
-type PubSub struct {
+type Pubsub struct {
 	mu    sync.Mutex
-	users map[string]*chan string
+	peers map[string]chan string
+
+	publishBuffer int
 }
 
-func NewPubsub() *PubSub {
-	return &PubSub{
-		users: make(map[string]*chan string),
+func NewPubsub(publishBuffer int) *Pubsub {
+	return &Pubsub{
+		peers:         make(map[string]chan string),
+		publishBuffer: publishBuffer,
 	}
 }
 
-func (p *PubSub) Has(user string) bool {
+func (p *Pubsub) Publish(user string, data string) bool {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	_, exists := p.users[user]
-
-	return exists
-}
-
-// client can publish to user
-func (p *PubSub) Publish(user string, data string) bool {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	ch, exists := p.users[user]
+	ch, exists := p.peers[user]
 	if !exists {
 		return false
 	}
 
 	select {
-	case *ch <- data:
+	case ch <- data:
 		return true
 	default:
 		return false
 	}
 }
 
-func (p *PubSub) Subscribe(user string) (*chan string, bool) {
+func (p *Pubsub) Subscribe(user string) (chan string, bool) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	if _, exists := p.users[user]; exists {
+	if _, exists := p.peers[user]; exists {
 		return nil, false
 	}
 
-	c := make(chan string, 4)
-	p.users[user] = &c
+	c := make(chan string, p.publishBuffer)
+	p.peers[user] = c
 
-	return &c, true
+	return c, true
 }
 
-func (p *PubSub) Unsubscribe(user string) {
+func (p *Pubsub) Unsubscribe(user string) bool {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	if ch, exists := p.users[user]; exists {
-		close(*ch)
-		delete(p.users, user)
+	if ch, exists := p.peers[user]; exists {
+		close(ch)
+		delete(p.peers, user)
+
+		return true
 	}
+
+	return false
+}
+
+func (p *Pubsub) Count() int {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	return len(p.peers)
 }

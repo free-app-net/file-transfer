@@ -2,34 +2,37 @@ import { describe, it, expect } from "vitest";
 import {
   generateRoomParams,
   parseRoomParams,
+  RoomParams,
   stringifyRoomParams,
 } from "./roomParams";
 
 describe("parseRoomParams", () => {
   it("should parse valid room params", () => {
-    const input = `m:user123_____________;p:peer456_____________;s:secret789___________`;
+    const input = `room123_____________;secret456___________`;
     const result = parseRoomParams(input);
 
-    expect(result).toEqual({
-      myId: "user123_____________",
-      peerId: "peer456_____________",
-      secret: "secret789___________",
-    });
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "roomId": "room123_____________",
+        "secret": "secret456___________",
+      }
+    `);
   });
 
   it("should parse with full urlvalid room params", () => {
-    const input = `https://example.com/room#m:${"user123".padEnd(20, "_")};p:${"peer456".padEnd(20, "_")};s:${"secret789".padEnd(20, "_")}`;
+    const input = `https://example.com/room#${"room123".padEnd(20, "_")};${"secret456".padEnd(20, "_")}`;
     const result = parseRoomParams(input);
 
-    expect(result).toEqual({
-      myId: "user123".padEnd(20, "_"),
-      peerId: "peer456".padEnd(20, "_"),
-      secret: "secret789".padEnd(20, "_"),
-    });
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "roomId": "room123_____________",
+        "secret": "secret456___________",
+      }
+    `);
   });
 
   it("should handle missing params", () => {
-    const input = "m:user123;p:peer456";
+    const input = "123123";
     const result = parseRoomParams(input);
 
     expect(result).toEqual(null);
@@ -50,10 +53,9 @@ describe("parseRoomParams", () => {
 
 describe("stringifyRoomParams", () => {
   it("should round-trip correctly", () => {
-    const original = {
-      myId: "user123".padEnd(20, "_"),
-      peerId: "peer456".padEnd(20, "_"),
-      secret: "secret789".padEnd(20, "_"),
+    const original: RoomParams = {
+      roomId: "room123".padEnd(20, "_"),
+      secret: "secret456".padEnd(20, "_"),
     };
 
     const stringified = stringifyRoomParams(original);

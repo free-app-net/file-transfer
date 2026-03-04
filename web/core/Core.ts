@@ -85,7 +85,9 @@ export class Core {
       roomParams,
     });
 
-    const signaler = new SignalingSSE(roomParams.myId, roomParams.peerId);
+    const myId = randomId();
+
+    const signaler = new SignalingSSE(roomParams.roomId, myId);
     const encryptor = new Encryptor(roomParams.secret);
 
     const peerChannel = new WebRTCPeerChannel(

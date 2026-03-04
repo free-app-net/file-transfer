@@ -53,13 +53,7 @@ export function useRoom() {
     const newCore = new Core(roomParams);
     setCore(newCore);
 
-    setShareCode(
-      stringifyRoomParams({
-        myId: roomParams.peerId,
-        peerId: roomParams.myId,
-        secret: roomParams.secret,
-      }),
-    );
+    setShareCode(stringifyRoomParams(roomParams));
 
     // all subscriptions are cleared on core.dispose()
     newCore.connectionState.subscribe((state) => {

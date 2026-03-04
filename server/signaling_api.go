@@ -4,81 +4,50 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 	"time"
 )
 
-type SignalingApi2 struct {
-	pubsub *PubSub
+type SignalingApi struct {
+	messaging *Messaging
 }
 
-func NewSignalingApi2(pubsub *PubSub) *SignalingApi2 {
-	return &SignalingApi2{
-		pubsub: pubsub,
-	}
-}
-
-func (s *SignalingApi2) Handler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		s.getHandler(w, r)
-		return
-	case http.MethodPost:
-		s.postHandler(w, r)
-		return
-	default:
-		s.writeResponse(w, http.StatusMethodNotAllowed, "expected GET or POST")
-		return
+func NewSignalingApi(messaging *Messaging) *SignalingApi {
+	return &SignalingApi{
+		messaging: messaging,
 	}
 }
 
-func (s *SignalingApi2) postHandler(w http.ResponseWriter, r *http.Request) {
-	userId, err := extractUserId(r.URL.Path)
-	if err != nil {
-		s.writeResponse(w, http.StatusBadRequest, "invalid userId in path")
-		return
-	}
+func (s *SignalingApi) Register(mux *http.ServeMux) {
+	mux.HandleFunc("/api/signaling/{roomId}/{peerId}", func(w http.ResponseWriter, r *http.Request) {
+		roomId := r.PathValue("roomId")
+		peerId := r.PathValue("peerId")
 
-	if !s.pubsub.Has(userId) {
-		s.writeResponse(w, http.StatusOK, "offline")
-		return
-	}
+		switch r.Method {
+		case http.MethodGet:
+			s.sseHandler(w, r, roomId, peerId)
+			return
+		case http.MethodPost:
+			s.postHandler(w, r, roomId, peerId)
+			return
+		default:
+			s.writeResponse(w, http.StatusMethodNotAllowed, "expected GET or POST")
+			return
+		}
+	})
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		s.writeResponse(w, http.StatusBadRequest, "malformed body")
-		return
-	}
-	defer r.Body.Close()
-
-	delivered := s.pubsub.Publish(userId, string(body))
-
-	if !delivered {
-		s.writeResponse(w, http.StatusOK, "offline")
-		return
-	}
-
-	s.writeResponse(w, http.StatusOK, "ok")
 }
 
-func (s *SignalingApi2) getHandler(w http.ResponseWriter, r *http.Request) {
-	userId, err := extractUserId(r.URL.Path)
-	if err != nil {
-		s.writeResponse(w, http.StatusBadRequest, "invalid userId in path")
-		return
-	}
-
+func (s *SignalingApi) sseHandler(w http.ResponseWriter, r *http.Request, roomId, userId string) {
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("Connection", "keep-alive")
-	w.Header().Set("Access-Control-Allow-Origin", "*") // TODO
 
-	ch, ok := s.pubsub.Subscribe(userId)
-	if !ok {
-		s.writeResponse(w, http.StatusBadRequest, "can't subscribe")
+	ch, err := s.messaging.Join(roomId, userId)
+	if err != nil {
+		s.writeResponse(w, http.StatusBadRequest, fmt.Sprintf("can't join: %s", err.Error()))
 		return
 	}
-	defer s.pubsub.Unsubscribe(userId)
+	defer s.messaging.Leave(roomId, userId)
 
 	flusher, ok := w.(http.Flusher)
 	if !ok {
@@ -91,7 +60,7 @@ func (s *SignalingApi2) getHandler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		select {
-		case msg, ok := <-*ch:
+		case msg, ok := <-ch:
 			if !ok {
 				// channel closed
 				return
@@ -112,23 +81,20 @@ func (s *SignalingApi2) getHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *SignalingApi2) writeResponse(w http.ResponseWriter, status int, v string) {
-	w.WriteHeader(status)
-	w.Write([]byte(v))
+func (s *SignalingApi) postHandler(w http.ResponseWriter, r *http.Request, roomId, peerId string) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		s.writeResponse(w, http.StatusBadRequest, "malformed body")
+		return
+	}
+	defer r.Body.Close()
+
+	s.messaging.Send(roomId, peerId, string(body))
+
+	s.writeResponse(w, http.StatusOK, "ok")
 }
 
-// Extract userId from path like /api/signaling/:userId
-func extractUserId(path string) (string, error) {
-	parts := strings.Split(strings.Trim(path, "/"), "/")
-
-	if len(parts) < 3 {
-		return "", fmt.Errorf("invalid path format")
-	}
-
-	userId := parts[len(parts)-1]
-	if userId == "" {
-		return "", fmt.Errorf("userId is empty")
-	}
-
-	return userId, nil
+func (s *SignalingApi) writeResponse(w http.ResponseWriter, status int, v string) {
+	w.WriteHeader(status)
+	w.Write([]byte(v))
 }

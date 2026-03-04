@@ -36,3 +36,6 @@ bin
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Go
+coverage.out

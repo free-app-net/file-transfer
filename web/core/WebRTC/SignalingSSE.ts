@@ -1,24 +1,26 @@
 import { SingleSubscriber } from "../../utils/SingleSubscriber";
 import { Signaler } from "./types";
 
-const endpointPath = (userId: string) => `/api/signaling/${userId}`;
+const getApiUrl = (roomId: string, peerId: string) =>
+  `/api/signaling/${roomId}/${peerId}`;
 
 export class SignalingSSE implements Signaler {
   private _onMessage = new SingleSubscriber<(msg: string) => void>();
   private _onError = new SingleSubscriber<(err: Error) => void>();
   private es: EventSource | null = null;
 
-  constructor(
-    private myId: string,
-    private peerId: string,
-  ) {}
+  private apiUrl: string;
+
+  constructor(roomId: string, myId: string) {
+    this.apiUrl = getApiUrl(roomId, myId);
+  }
 
   start(): void {
     if (this.es) {
       throw new Error("Already started");
     }
 
-    this.es = new EventSource(endpointPath(this.myId));
+    this.es = new EventSource(this.apiUrl);
     this.es.onerror = () => {
       if (this.es) {
         if (this.es.readyState === EventSource.CONNECTING) {
@@ -48,9 +50,8 @@ export class SignalingSSE implements Signaler {
   }
 
   private async _send(msg: string) {
-    const url = endpointPath(this.peerId);
     try {
-      const res = await fetch(url, {
+      const res = await fetch(this.apiUrl, {
         method: "POST",
         body: msg,
       });

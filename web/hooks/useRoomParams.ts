@@ -3,8 +3,7 @@ import { parseRoomParams, RoomParams } from "../utils/roomParams";
 
 function ssrRoomParams(): RoomParams {
   return {
-    peerId: "",
-    myId: "",
+    roomId: "",
     secret: "",
   };
 }
@@ -29,8 +28,7 @@ export function useRoomParams(): RoomParams {
   if (!roomParams) {
     window.location.href = "/"; // Redirect to home page if room params are invalid
     return {
-      peerId: "",
-      myId: "",
+      roomId: "",
       secret: "",
     };
   }

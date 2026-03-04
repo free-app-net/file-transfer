@@ -25,11 +25,11 @@ func Run(opts RunOpts) {
 	mux.HandleFunc("/health", healthHandler)
 	mux.HandleFunc("/api/health", healthHandler)
 
-	pubsub := NewPubsub()
-	signalingApi2 := NewSignalingApi2(pubsub)
-	mux.HandleFunc("/api/signaling/", signalingApi2.Handler)
+	messaging := NewMessaging()
+	signalingApi2 := NewSignalingApi(messaging)
+	signalingApi2.Register(mux)
 
-	mux.Handle("/", serveFilesWith404Handling(opts.Fs))
+	mux.Handle("/", serveFilesWithCaching(opts.Fs))
 
 	addr := fmt.Sprintf("%s:%d", opts.Host, opts.Port)
 
@@ -51,7 +51,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "OK")
 }
 
-func serveFilesWith404Handling(embedFs fs.FS) http.Handler {
+func serveFilesWithCaching(embedFs fs.FS) http.Handler {
 	fileServer := http.FileServerFS(embedFs)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -64,9 +64,8 @@ func serveFilesWith404Handling(embedFs fs.FS) http.Handler {
 			return
 		}
 
-		// let go handle the rest.
-		// unfortunately, these have no cache headers at all
-		// as embedFs has no timestamps
+		// go will handle the rest of the files.
+		// unfortunately, these will have no cache headers as embedFs has no timestamps...
 
 		fileServer.ServeHTTP(w, r)
 	})
