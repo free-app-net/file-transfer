@@ -122,7 +122,7 @@ export const faqs: {
     question: "Is the source code available?",
     answer: (
       <p>
-        Sure thing! This project is open source and licensed under the{" "}
+        This project is open source and licensed under the{" "}
         <ExternalLink href="https://www.gnu.org/licenses/agpl-3.0.en.html">
           AGPL-3.0 license
         </ExternalLink>
@@ -160,7 +160,7 @@ export const faqs: {
           <ExternalLink href={selfHostDocsUrl}>
             self-hosting instructions
           </ExternalLink>{" "}
-          for up-to-date self-hosting instructions.
+          for up-to-date instructions.
         </p>
       </>
     ),

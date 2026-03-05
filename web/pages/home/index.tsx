@@ -44,15 +44,14 @@ export default function HomePage() {
     <div className="home-container container">
       {/* Hero Section */}
       <section className="home-hero">
-        <h1 className="home-hero__title">Free Peer-to-Peer File Sharing</h1>
+        <h1 className="home-hero__title">Free App for File Transfer</h1>
         <p className="home-hero__subtitle">
           Share files directly between browsers. No servers, no limits.
         </p>
         <p className="home-hero__description">
           Create a secure room and transfer files instantly with anyone,
-          anywhere. Your files are sent directly from device to device using
-          WebRTC technology, ensuring fast, private, and end-to-end encrypted
-          transfers.
+          anywhere. Your files are sent directly from device to device, ensuring
+          fast, private, and end-to-end encrypted transfers.
         </p>
       </section>
 

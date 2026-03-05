@@ -2,7 +2,7 @@ package main
 
 import (
 	"embed"
-	"ffps/server"
+	"file-transfer/server"
 	"io/fs"
 	"os"
 	"strconv"

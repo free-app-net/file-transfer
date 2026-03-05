@@ -1,5 +1,5 @@
 {
-  "name": "fpps",
+  "name": "@free-app-net/file-transfer",
   "description": "Free Peer-to-Peer file Sharing application (Real name TBD)",
   "private": true,
   "type": "module",

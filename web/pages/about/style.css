@@ -190,8 +190,8 @@
 }
 
 .faq-item__answer-content {
-    /*padding: 0 var(--spacing-xl) var(--spacing-lg) var(--spacing-xl);*/
-    padding: var(--spacing-lg) var(--spacing-xl);
+    padding: 0 var(--spacing-xl);
+
     font-size: var(--font-size-base);
     color: var(--color-text-secondary);
     line-height: var(--line-height-relaxed);
@@ -201,9 +201,9 @@
     margin: var(--spacing-md) 0;
 }
 
-.faq-item__answer-content p:last-child {
+/*.faq-item__answer-content p:last-child {
     margin-bottom: 0;
-}
+}*/
 
 .faq-item__answer-content ul {
     margin: var(--spacing-md) 0;

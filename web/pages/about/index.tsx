@@ -29,13 +29,13 @@ export default function AboutPage() {
       {/* Main Content */}
       <div className="about-content">
         <section className="about-section">
-          <h2 className="about-section__title">What is FPPS?</h2>
+          <h2 className="about-section__title">What is File Transfer?</h2>
           <p className="about-section__text">
-            FPPS stands for <b>Free Peer-to-Peer file Sharing, real name TBD</b>
-            . It is a web application that enables direct file transfers between
-            browsers using WebRTC technology. Unlike traditional file-sharing
-            services that require uploading to a server, FPPS establishes direct
-            browser connections, enabling fast, private, unlimited file
+            This application is part of the Free App suite. It is a web
+            application that enables direct file transfers between browsers
+            using WebRTC technology. Unlike traditional file-sharing services
+            that require uploading to a server, File Transfer establishes a
+            direct browser connection, enabling fast, private, unlimited file
             transfers.
           </p>
         </section>
@@ -95,13 +95,13 @@ export default function AboutPage() {
         <section className="about-section">
           <h2 className="about-section__title">Open Source</h2>
           <p className="about-section__text">
-            FPPS is open source software licensed under{" "}
+            File Transfer is open source software licensed under{" "}
             <ExternalLink href="https://www.gnu.org/licenses/agpl-3.0.en.html">
               AGPL-3.0
             </ExternalLink>
-            . The source code can be found{" "}
+            . The source code is{" "}
             <ExternalLink href="https://github.com/romanzy313/fpps">
-              here
+              publically available
             </ExternalLink>
             .
           </p>

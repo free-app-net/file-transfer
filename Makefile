@@ -4,11 +4,11 @@
 
 .PHONY: docker-dev
 docker-dev:
-	docker build --progress plain -t fpps-dev .
-	docker run -e PORT=6173 -p 6173:6173 fpps-dev
+	docker build --progress plain -t file-transfer-dev .
+	docker run -e PORT=6173 -p 6173:6173 file-transfer-dev
 
+IMAGE ?= romanzy313/file-transfer
 .PHONY: docker-publish
-IMAGE ?= romanzy313/fpps
 docker-publish:
 	pnpm test
 	@if [ -z "$(TAGNAME)" ]; then \

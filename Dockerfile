@@ -20,10 +20,10 @@ RUN CGO_ENABLED=0 go build -o main .
 
 # For build artifactors
 FROM scratch AS binaries
-COPY --from=go-builder /app/main /fpps-linux-amd64
+COPY --from=go-builder /app/main /file-transfer-linux-amd64
 
 # Deploy it
 FROM scratch AS runtime
 WORKDIR /app
-COPY --from=go-builder /app/main /fpps
-CMD ["/fpps"]
+COPY --from=go-builder /app/main /file-transfer
+CMD ["/file-transfer"]
