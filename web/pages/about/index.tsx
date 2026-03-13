@@ -57,35 +57,35 @@ export default function AboutPage() {
         </section>
 
         {/* Features */}
-        <div className="features-grid">
-          <div className="feature-card card">
-            <div className="feature-card__icon">🔒</div>
-            <h3 className="feature-card__title">Secure & Private</h3>
-            <p className="feature-card__description">
+        <div className="about-features-grid">
+          <div className="about-feature-card card">
+            <div className="about-feature-card__icon">🔒</div>
+            <h3 className="about-feature-card__title">Secure & Private</h3>
+            <p className="about-feature-card__description">
               End-to-end encrypted connections. Your files are never stored on
               our servers.
             </p>
           </div>
-          <div className="feature-card card">
-            <div className="feature-card__icon">⚡</div>
-            <h3 className="feature-card__title">Fast Transfers</h3>
-            <p className="feature-card__description">
+          <div className="about-feature-card card">
+            <div className="about-feature-card__icon">⚡</div>
+            <h3 className="about-feature-card__title">Fast Transfers</h3>
+            <p className="about-feature-card__description">
               Direct peer-to-peer connections mean faster transfers with no
               middleman.
             </p>
           </div>
-          <div className="feature-card card">
-            <div className="feature-card__icon">∞</div>
-            <h3 className="feature-card__title">No Limits</h3>
-            <p className="feature-card__description">
+          <div className="about-feature-card card">
+            <div className="about-feature-card__icon">∞</div>
+            <h3 className="about-feature-card__title">No Limits</h3>
+            <p className="about-feature-card__description">
               Share files of any size with no upload limits or file size
               restrictions.
             </p>
           </div>
-          <div className="feature-card card">
-            <div className="feature-card__icon">🌐</div>
-            <h3 className="feature-card__title">Browser-Based</h3>
-            <p className="feature-card__description">
+          <div className="about-feature-card card">
+            <div className="about-feature-card__icon">🌐</div>
+            <h3 className="about-feature-card__title">Browser-Based</h3>
+            <p className="about-feature-card__description">
               Works entirely in your browser. No installation or registration
               required.
             </p>
