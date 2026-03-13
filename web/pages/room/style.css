@@ -307,21 +307,32 @@
 
 .actions-row {
     display: flex;
+    align-items: stretch;
     gap: var(--spacing-md);
 }
 
 .actions-group-grow {
     display: flex;
     gap: var(--spacing-md);
-    flex-grow: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.action-item {
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .action-group-shrink {
-    flex-shrink: 0;
+    flex: 0 0 auto;
 }
 
-.actions-row button {
-    flex: 1;
+.actions-group-grow button {
+    width: 100%;
+}
+
+.action-group-shrink button {
+    width: auto;
 }
 
 /* File Input Styling */
@@ -336,18 +347,6 @@
     clip: rect(0 0 0 0);
     clip-path: inset(50%);
     white-space: nowrap;
-}
-
-/* Upload Section Spacer (for Peer component) */
-.upload-section-spacer {
-    display: none;
-}
-
-@media (min-width: 1024px) {
-    .upload-section-spacer {
-        display: flex;
-        flex-grow: 1;
-    }
 }
 
 /* Mobile Responsiveness */
@@ -372,12 +371,20 @@
         font-size: var(--font-size-xl);
     }
 
-    .action-group {
-        min-width: 100%;
-    }
-
     .actions-row {
         flex-direction: column;
+    }
+
+    .actions-group-grow {
+        width: 100%;
+    }
+
+    .action-group-shrink {
+        width: 100%;
+    }
+
+    .action-group-shrink button {
+        width: 100%;
     }
 
     .transfer-progress__header {

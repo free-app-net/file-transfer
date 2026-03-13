@@ -21,6 +21,8 @@ export function Peer({
   const fileCount = peerFiles.totalFiles;
   const fileSizeText = formatSize(peerFiles.totalBytes);
 
+  const isTransferring = downloadStatus === "transfer";
+
   function getStatusText(): string {
     if (fileCount === 0) {
       return "Waiting for peer to select files";
@@ -77,27 +79,28 @@ export function Peer({
         progress={transferSpeed}
       ></TransferProgressDisplay>
 
-      {/* Spacer to match Me component's upload section height on desktop */}
-      <div className="upload-section-spacer"></div>
-
       <div className="file-section__actions">
         <div className="actions-row">
-          <button
-            data-testid="start-download-button"
-            type="button"
-            disabled={fileCount === 0 || downloadStatus === "transfer"}
-            onClick={() => startDownload()}
-          >
-            Download as ZIP
-          </button>
-          <button
-            className="danger"
-            type="button"
-            disabled={downloadStatus !== "transfer"}
-            onClick={() => abortDownload()}
-          >
-            Stop Download
-          </button>
+          <div className="actions-group-grow">
+            {isTransferring ? (
+              <button
+                className="danger"
+                type="button"
+                onClick={() => abortDownload()}
+              >
+                Stop Download
+              </button>
+            ) : (
+              <button
+                data-testid="start-download-button"
+                type="button"
+                disabled={fileCount === 0}
+                onClick={() => startDownload()}
+              >
+                Download as ZIP
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

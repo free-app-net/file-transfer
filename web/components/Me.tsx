@@ -24,10 +24,10 @@ export function Me({
   const fileCount = peerFiles.totalFiles;
   const fileSizeText = formatSize(peerFiles.totalBytes);
 
-  const canUploadFiles = uploadStatus !== "transfer";
+  const isTransferring = uploadStatus === "transfer";
 
   function onFilesSelected(files: File[]) {
-    if (!canUploadFiles) {
+    if (isTransferring) {
       return;
     }
 
@@ -90,20 +90,25 @@ export function Me({
       ></TransferProgressDisplay>
 
       <div className="file-section__actions">
-        <FileUploader
-          canClear={fileCount > 0}
-          onClear={clearFiles}
-          onSelect={onFilesSelected}
-        ></FileUploader>
-        <div className="actions-row">
-          <button
-            className="danger"
-            disabled={uploadStatus !== "transfer"}
-            onClick={abortUpload}
-          >
-            Stop Upload
-          </button>
-        </div>
+        {isTransferring ? (
+          <div className="actions-row">
+            <div className="actions-group-grow">
+              <button
+                className="danger"
+                disabled={uploadStatus !== "transfer"}
+                onClick={abortUpload}
+              >
+                Stop Upload
+              </button>
+            </div>
+          </div>
+        ) : (
+          <FileUploader
+            canClear={fileCount > 0}
+            onClear={clearFiles}
+            onSelect={onFilesSelected}
+          ></FileUploader>
+        )}
       </div>
     </div>
   );
