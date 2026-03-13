@@ -1,8 +1,8 @@
-import { useState } from "preact/hooks";
 import { FullFilesState } from "../core/Core";
 import { TransferProgressValue, TransferStatus } from "../core";
 import { formatSize } from "../utils/formatSize";
 import { TransferProgressDisplay } from "./TransferProgressDisplay";
+import { FileUploader } from "./FileUploader";
 
 type Props = {
   peerFiles: FullFilesState;
@@ -26,58 +26,9 @@ export function Me({
 
   const canUploadFiles = uploadStatus !== "transfer";
 
-  const [isDraggingFolder, setIsDraggingFolder] = useState(false);
-  const [isDraggingFiles, setIsDraggingFiles] = useState(false);
-
-  // These vibes could be abstracted
-  function handleDragOver(e: DragEvent, type: "folder" | "files") {
-    e.preventDefault();
-    e.stopPropagation();
-    if (type === "folder") {
-      setIsDraggingFolder(true);
-    } else {
-      setIsDraggingFiles(true);
-    }
-  }
-
-  function handleDragLeave(e: DragEvent, type: "folder" | "files") {
-    e.preventDefault();
-    e.stopPropagation();
-    if (type === "folder") {
-      setIsDraggingFolder(false);
-    } else {
-      setIsDraggingFiles(false);
-    }
-  }
-
-  function handleDrop(e: DragEvent, type: "folder" | "files") {
-    e.preventDefault();
-    e.stopPropagation();
-    if (type === "folder") {
-      setIsDraggingFolder(false);
-    } else {
-      setIsDraggingFiles(false);
-    }
-
+  function onFilesSelected(files: File[]) {
     if (!canUploadFiles) {
       return;
-    }
-
-    const files = e.dataTransfer?.files;
-    if (files) {
-      onFilesSelect(files);
-    }
-  }
-
-  function onFilesSelect(fileList: FileList) {
-    if (!canUploadFiles) {
-      return;
-    }
-
-    const files: File[] = [];
-
-    for (const file of fileList) {
-      files.push(file);
     }
 
     addMyFiles(files);
@@ -139,53 +90,10 @@ export function Me({
       ></TransferProgressDisplay>
 
       <div className="file-section__actions">
-        <div className="actions-row">
-          <div className="action-group">
-            <label className="action-group__label" htmlFor="upload-folder">
-              Upload Folder
-            </label>
-            <div
-              className={`file-input-wrapper ${isDraggingFolder ? "file-input-wrapper--dragging" : ""}`}
-              onDragOver={(e) => handleDragOver(e, "folder")}
-              onDragLeave={(e) => handleDragLeave(e, "folder")}
-              onDrop={(e) => handleDrop(e, "folder")}
-            >
-              <input
-                id="upload-folder"
-                type="file"
-                disabled={!canUploadFiles}
-                multiple
-                {...({
-                  webkitdirectory: true,
-                  mozdirectory: true,
-                  directory: true,
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                } as any)}
-                onChange={(e) => onFilesSelect(e.currentTarget.files!)}
-              />
-            </div>
-          </div>
-          <div className="action-group">
-            <label className="action-group__label" htmlFor="upload-files">
-              Upload Files
-            </label>
-            <div
-              className={`file-input-wrapper ${isDraggingFiles ? "file-input-wrapper--dragging" : ""}`}
-              onDragOver={(e) => handleDragOver(e, "files")}
-              onDragLeave={(e) => handleDragLeave(e, "files")}
-              onDrop={(e) => handleDrop(e, "files")}
-            >
-              <input
-                id="upload-files"
-                data-testid="upload-files-input"
-                type="file"
-                disabled={!canUploadFiles}
-                multiple
-                onChange={(e) => onFilesSelect(e.currentTarget.files!)}
-              />
-            </div>
-          </div>
-        </div>
+        <FileUploader
+          enabled={canUploadFiles}
+          onSelect={onFilesSelected}
+        ></FileUploader>
         <div className="actions-row">
           <button
             className="secondary"
