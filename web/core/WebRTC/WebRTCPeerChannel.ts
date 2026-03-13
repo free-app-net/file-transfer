@@ -210,7 +210,7 @@ export class WebRTCPeerChannel implements PeerChannel {
   }
 
   private _reset() {
-    console.warn("RESETTING DATA CHANNEL");
+    // console.warn("RESETTING DATA CHANNEL");
     this._isReady = false;
     this.signaler.stop();
 
@@ -225,7 +225,7 @@ export class WebRTCPeerChannel implements PeerChannel {
   }
 
   dispose() {
-    console.warn("DATACHANNEL DISPOSED");
+    // console.warn("DATACHANNEL DISPOSED");
 
     this._reset();
     this._messageSubscribers.dispose();
@@ -306,13 +306,10 @@ export class WebRTCPeerChannel implements PeerChannel {
     this.signaler.start();
 
     this.peer.on("connected", () => {
-      console.log("PEER CONNECTED");
-
       this.setupDataChannel();
     });
 
     this.peer.on("disconnected", () => {
-      console.log("PEER DISCONNECTED");
       if (this.onConnectionState) {
         this.onConnectionState("disconnected");
       }

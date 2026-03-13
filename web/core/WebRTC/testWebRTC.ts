@@ -45,15 +45,14 @@ export function canWebRTCUseDirectConnection(): Promise<boolean> {
           .split("\r\n")
           .filter((line) => line.startsWith("a=candidate:"));
 
-        const localCandidates = candidates.filter((candidate) =>
-          candidate.includes("typ host"),
-        );
-
-        console.info("WebRTC candidate parsed", {
-          totalCount: candidates.length,
-          localCount: localCandidates.length,
-          candidates: candidates,
-        });
+        // const localCandidates = candidates.filter((candidate) =>
+        //   candidate.includes("typ host"),
+        // );
+        // console.info("WebRTC candidate parsed", {
+        //   totalCount: candidates.length,
+        //   localCount: localCandidates.length,
+        //   candidates: candidates,
+        // });
 
         if (candidates.length === 0) {
           // No candidates at all: candidate generation was suppressed, maybe?

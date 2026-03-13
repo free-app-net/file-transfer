@@ -108,7 +108,7 @@ export class Core {
     });
 
     peerChannel.onConnectionState = (status) => {
-      console.log("PEER CHANNEL STATE", {
+      console.log("Peer connection state changed", {
         status,
       });
 
