@@ -67,7 +67,7 @@ export default function HomePage() {
           </div>
           <div className="home-card__content">
             <button
-              className="home-card__button"
+              className="home-card__button guide-button"
               onClick={startRoom}
               data-testid="create-room-button"
             >

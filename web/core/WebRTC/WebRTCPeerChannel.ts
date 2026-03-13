@@ -245,9 +245,6 @@ export class WebRTCPeerChannel implements PeerChannel {
     dataChannel.bufferedAmountLowThreshold = this.backpressureAmount;
 
     dataChannel.addEventListener("open", () => {
-      console.log("DATACHANNEL OPENED", {
-        dataChannel,
-      });
       this._isReady = true;
       if (this.onConnectionState) {
         this.onConnectionState("connected");

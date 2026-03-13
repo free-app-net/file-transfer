@@ -6,14 +6,14 @@ Instructions:
 - Put information here for next release
 
 ## [VERSOIN] - DATE
-### Added
 - New feature X
-
-### Fixed
 - Bug Y
 -->
 
 ## [Unreleased]
+- Revamp choosing files UI
+- Guide highlights
+- Animate main workflow buttons
 
 ## [1.2.1] - 2026-03-05
 - Cleanup dependencies

@@ -19,7 +19,7 @@ export function ShareLink({ code }: { code: string }) {
           Share this link to exchange files privately
         </div>
         <div
-          className="share-section__link-box"
+          className="share-section__link-box guide-highlight"
           onClick={copyToClipboard}
           role="button"
           tabIndex={0}

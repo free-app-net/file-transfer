@@ -254,12 +254,10 @@ button {
 
 button:hover:not(:disabled) {
     background-color: var(--color-accent-hover);
-    box-shadow: var(--shadow-md);
 }
 
 button:active:not(:disabled) {
     background-color: var(--color-accent-active);
-    box-shadow: var(--shadow-sm);
 }
 
 button.secondary {
@@ -400,11 +398,6 @@ em {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: var(--spacing-xl);
-    transition: border-color var(--transition-base);
-}
-
-.card:hover {
-    border-color: var(--color-border-hover);
 }
 
 /* quick toast modifications */
@@ -417,4 +410,67 @@ em {
 }
 :root {
     --toastify-toast-width: 420px;
+}
+
+/* guides */
+
+.guide-highlight {
+    border-radius: var(--radius-sm);
+    outline-color: transparent; /* for high contrast modes */
+    box-shadow: 0 0 0 2px
+        color-mix(in srgb, var(--color-accent) 70%, transparent);
+    animation: guide-highlight-breathe 2.2s cubic-bezier(0.4, 0, 0.2, 1)
+        infinite;
+}
+
+@keyframes guide-highlight-breathe {
+    0%,
+    100% {
+        box-shadow: 0 0 0 2px
+            color-mix(in srgb, var(--color-accent) 62%, transparent);
+    }
+    50% {
+        box-shadow: 0 0 0 3px
+            color-mix(in srgb, var(--color-accent-hover) 78%, transparent);
+    }
+}
+
+/*not disabled*/
+.guide-button:not(:disabled) {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+        90deg,
+        var(--color-accent) 0%,
+        var(--color-accent) 25%,
+        var(--color-accent-hover) 50%,
+        var(--color-accent) 75%,
+        var(--color-accent) 100%
+    );
+
+    box-shadow: 0 0 0 0px transparent inset;
+    background-size: 200% 100%;
+    background-position: 0% 0%;
+    animation: guide-button-slide 2.4s ease-in-out infinite;
+    transition: var(--transition-fast);
+}
+
+.guide-button:hover:not(:disabled) {
+    filter: brightness(1.1);
+    box-shadow: 0 0 0 1px var(--color-text-secondary) inset;
+}
+.guide-button:active:not(:disabled) {
+    background: var(--color-accent-active);
+}
+
+@keyframes guide-button-slide {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 0%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
 }

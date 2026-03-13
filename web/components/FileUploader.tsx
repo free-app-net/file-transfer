@@ -4,9 +4,15 @@ type Props = {
   onSelect: (files: File[]) => void;
   onClear: () => void;
   canClear: boolean;
+  highlight: boolean;
 };
 
-export function FileUploader({ onSelect, onClear, canClear }: Props) {
+export function FileUploader({
+  onSelect,
+  onClear,
+  canClear,
+  highlight,
+}: Props) {
   const filesInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
 
@@ -23,7 +29,7 @@ export function FileUploader({ onSelect, onClear, canClear }: Props) {
   }
 
   return (
-    <div className="actions-row">
+    <div className={`actions-row ${highlight ? "guide-highlight" : ""}`}>
       <div className="actions-group-grow">
         <div className="action-item">
           <input

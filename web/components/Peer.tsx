@@ -93,6 +93,7 @@ export function Peer({
             ) : (
               <button
                 data-testid="start-download-button"
+                className={"guide-button"}
                 type="button"
                 disabled={fileCount === 0}
                 onClick={() => startDownload()}

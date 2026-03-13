@@ -11,6 +11,7 @@ type Props = {
   addMyFiles: (files: File[]) => void;
   clearFiles: () => void;
   abortUpload: () => void;
+  guideHighlightUploader: boolean;
 };
 
 export function Me({
@@ -20,6 +21,7 @@ export function Me({
   addMyFiles,
   clearFiles,
   abortUpload,
+  guideHighlightUploader,
 }: Props) {
   const fileCount = peerFiles.totalFiles;
   const fileSizeText = formatSize(peerFiles.totalBytes);
@@ -107,8 +109,10 @@ export function Me({
             canClear={fileCount > 0}
             onClear={clearFiles}
             onSelect={onFilesSelected}
+            highlight={guideHighlightUploader}
           ></FileUploader>
         )}
+        {/* && fileCount === 0*/}
       </div>
     </div>
   );

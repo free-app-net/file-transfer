@@ -104,7 +104,7 @@
     color: var(--color-text-primary);
     word-break: break-all;
     display: inline-block;
-    user-select: all;
+    /*user-select: all;*/
     background-color: var(--color-bg-tertiary);
     padding: var(--spacing-md);
     border-radius: var(--radius-md);

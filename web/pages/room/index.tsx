@@ -23,6 +23,11 @@ export default function RoomPage() {
     error,
   } = useRoom();
 
+  const guideHighlightUploader =
+    connectionState === "connected" &&
+    myFiles.totalFiles === 0 &&
+    peerFiles.totalFiles === 0;
+
   return (
     <div className="room-container container">
       <PeerStatus
@@ -39,6 +44,7 @@ export default function RoomPage() {
             clearFiles={clearFiles}
             transferSpeed={uploadSpeed}
             abortUpload={abortUpload}
+            guideHighlightUploader={guideHighlightUploader}
           ></Me>
         </div>
         <div className="peer-files">
