@@ -345,11 +345,6 @@
     transition: border-color var(--transition-fast);
 }
 
-.file-input-wrapper--dragging {
-    border-color: var(--color-accent);
-    background-color: rgba(90, 95, 245, 0.1);
-}
-
 .file-input-wrapper input[type="file"] {
     width: 100%;
 }
